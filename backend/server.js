@@ -13,7 +13,8 @@ app.use(cors({
   origin: [
     'http://localhost:5000',
     'http://localhost:3000',
-    'https://your-github-username.github.io'
+    'https://venkycodex.github.io',
+    'https://bike-rental-hub.onrender.com'
   ],
   credentials: true
 }));

@@ -1,6 +1,6 @@
 'use strict';
 
-const API = window.location.hostname === 'localhost' ? '/api' : 'https://your-render-app.onrender.com/api';
+const API = window.location.hostname === 'localhost' ? '/api' : 'https://bike-rental-hub.onrender.com/api';
 
 // ── HELPERS ──
 const $       = id => document.getElementById(id);
