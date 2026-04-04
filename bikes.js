@@ -2,11 +2,6 @@
 
 const API = window.location.hostname === 'localhost' ? '/api' : 'https://bike-rental-hub.onrender.com/api';
 
-// ── LOADER ──
-window.addEventListener('load', () => {
-  setTimeout(() => document.getElementById('loader').classList.add('hidden'), 2200);
-});
-
 // ── HAMBURGER ──
 const hamburger = document.getElementById('hamburger');
 const navLinks  = document.getElementById('navLinks');
