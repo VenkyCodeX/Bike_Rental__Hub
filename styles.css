@@ -379,6 +379,7 @@ footer {
     text-align: center;
   }
 
+  .hero { align-items: flex-start; padding-top: 90px; min-height: auto; }
   .hero-stats { gap: 20px; }
   .footer-grid { grid-template-columns: 1fr; gap: 32px; }
 }
