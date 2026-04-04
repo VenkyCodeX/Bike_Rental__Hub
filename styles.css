@@ -197,16 +197,6 @@ input, select, textarea { font-family: inherit; outline: none; }
   from { transform: translateY(0); }
   to   { transform: translateY(-14px); }
 }
-.hero-price-tag {
-  position: absolute; bottom: 40px; left: 0; z-index: 2;
-  background: var(--orange); color: #fff;
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 20px; font-weight: 700;
-  padding: 8px 20px; border-radius: 30px;
-  box-shadow: 0 4px 16px rgba(255,122,0,0.4);
-}
-.hero-price-tag span { font-size: 12px; font-family: 'Inter', sans-serif; font-weight: 400; opacity: 0.9; }
-
 /* Responsive */
 @media (max-width: 900px) {
   .hero-content { grid-template-columns: 1fr; gap: 40px; }
