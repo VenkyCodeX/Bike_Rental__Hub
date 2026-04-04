@@ -111,18 +111,8 @@ input, select, textarea { font-family: inherit; outline: none; }
   background: linear-gradient(135deg, #fff8f2 0%, #ffffff 50%, #fff3e8 100%);
   z-index: 0;
 }
-
-/* Two-column layout */
-.hero-content {
-  position: relative; z-index: 1;
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  align-items: center;
-}
-
-.hero-text { max-width: 520px; }
+.hero-content { position: relative; z-index: 1; width: 100%; }
+.hero-text { max-width: 640px; }
 
 .hero-badge {
   display: inline-flex; align-items: center; gap: 8px;
@@ -145,7 +135,7 @@ input, select, textarea { font-family: inherit; outline: none; }
 .hero p {
   font-size: 16px;
   color: var(--text-muted); line-height: 1.75;
-  margin-bottom: 32px; max-width: 460px;
+  margin-bottom: 32px; max-width: 500px;
 }
 
 .btn-primary {
@@ -163,54 +153,17 @@ input, select, textarea { font-family: inherit; outline: none; }
 }
 
 .hero-stats {
-  display: flex; flex-wrap: wrap; gap: 28px;
-  margin-top: 44px; padding-top: 28px;
+  display: flex; flex-wrap: wrap; gap: 32px;
+  margin-top: 48px; padding-top: 32px;
   border-top: 1px solid var(--border);
 }
 .stat-item { text-align: left; }
 .stat-num {
   font-family: 'Rajdhani', sans-serif;
-  font-size: 32px; font-weight: 700;
+  font-size: 36px; font-weight: 700;
   color: var(--orange); line-height: 1;
 }
-.stat-label { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
-
-/* Right side: bike image */
-.hero-image {
-  position: relative;
-  display: flex; align-items: center; justify-content: center;
-}
-.hero-image-bg {
-  position: absolute;
-  width: 420px; height: 420px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,122,0,0.1) 0%, rgba(255,122,0,0.03) 60%, transparent 80%);
-  top: 50%; left: 50%; transform: translate(-50%,-50%);
-}
-.hero-image img {
-  position: relative; z-index: 1;
-  width: 100%; max-width: 520px;
-  object-fit: contain;
-  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.12));
-  animation: bikeBob 4s ease-in-out infinite alternate;
-}
-@keyframes bikeBob {
-  from { transform: translateY(0); }
-  to   { transform: translateY(-14px); }
-}
-/* Responsive */
-@media (max-width: 900px) {
-  .hero-content { grid-template-columns: 1fr; gap: 40px; }
-  .hero-text { max-width: 100%; }
-  .hero-image { order: -1; }
-  .hero-image img { max-width: 340px; }
-  .hero-image-bg { width: 300px; height: 300px; }
-}
-@media (max-width: 600px) {
-  .hero { padding: 90px 4% 50px; }
-  .hero h1 { font-size: clamp(34px, 10vw, 48px); }
-  .hero-stats { gap: 20px; }
-  .hero-price-tag { font-size: 16px; }
-}
+.stat-label { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
 
 /* ── SECTIONS ── */
 section { padding: 80px 5%; }
