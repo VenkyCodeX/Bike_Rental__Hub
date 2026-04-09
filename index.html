@@ -71,6 +71,10 @@
     <div class="book-field"><input type="date" id="bkDate2" /><i class="fas fa-calendar"></i></div>
     <div class="book-field"><input type="time" id="bkTime2" value="10:00" /><i class="fas fa-clock"></i></div>
   </div>
+  <div class="book-row" id="bkMonthlyEndRow" style="display:none">
+    <div class="book-field"><input type="date" id="bkDateEnd" /><i class="fas fa-calendar"></i></div>
+    <div class="book-field"><input type="time" id="bkTimeEnd" value="10:00" /><i class="fas fa-clock"></i></div>
+  </div>
   <a href="bikes.html" class="book-search-btn">Search</a>
 </div>
 
@@ -381,14 +385,16 @@
 
 <script src="script.js"></script>
 <script>
-const t = new Date(), t2 = new Date(t.getTime()+86400000);
+const t = new Date(), t2 = new Date(t.getTime()+86400000), t30 = new Date(t.getTime()+30*86400000);
 const fmt = d => d.toISOString().split('T')[0];
 document.getElementById('bkDate1').value = fmt(t);
 document.getElementById('bkDate2').value = fmt(t2);
+document.getElementById('bkDateEnd').value = fmt(t30);
 function setTab(tab) {
   document.getElementById('tabDaily').classList.toggle('active', tab==='daily');
   document.getElementById('tabMonthly').classList.toggle('active', tab==='monthly');
   document.getElementById('bkReturnRow').style.display = tab==='daily' ? 'grid' : 'none';
+  document.getElementById('bkMonthlyEndRow').style.display = tab==='monthly' ? 'grid' : 'none';
 }
 function toggleFaq(btn) {
   const item = btn.closest('.faq-item');
