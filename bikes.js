@@ -188,7 +188,7 @@ document.getElementById('modalClose').addEventListener('click', closeModal);
 overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
 
 function resetModal() {
-  ['custName', 'custPhone', 'startDate', 'endDate', 'upiId', 'cardNum', 'cardExpiry', 'cardCvv', 'cardName'].forEach(id => {
+  ['custName', 'custPhone', 'startDate', 'endDate', 'upiId', 'cardNum', 'cardExpiry', 'cardCvv', 'cardName', 'couponCode'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
@@ -198,9 +198,10 @@ function resetModal() {
   if (dt) dt.value = '10:00';
   const tc = document.getElementById('termsCheck');
   if (tc) tc.checked = false;
-  document.getElementById('sumDays').textContent  = '– days';
-  document.getElementById('sumRate').textContent  = '₹–/day';
-  document.getElementById('sumTotal').textContent = '₹–';
+  const ic = document.getElementById('insuranceCheck');
+  if (ic) ic.checked = true;
+  document.getElementById('sumTotal').textContent     = '₹–';
+  document.getElementById('sumGrandTotal').textContent = '₹–';
   selectedRating = 0;
   updateStarPicker(0);
   document.getElementById('reviewName').value = '';
@@ -242,13 +243,22 @@ function calcSummary() {
   const s = document.getElementById('startDate').value;
   const e = document.getElementById('endDate').value;
   if (!s || !e || !currentBike) return;
-  const days  = Math.max(1, Math.round((new Date(e) - new Date(s)) / 86400000));
-  const total = days * currentBike.price;
-  document.getElementById('sumDays').textContent  = `${days} day${days > 1 ? 's' : ''}`;
-  document.getElementById('sumRate').textContent  = `₹${currentBike.price}/day`;
-  document.getElementById('sumTotal').textContent = `₹${total}`;
-  return { days, total };
+  const days     = Math.max(1, Math.round((new Date(e) - new Date(s)) / 86400000));
+  const rental   = days * currentBike.price;
+  const insurance = document.getElementById('insuranceCheck').checked ? 39 : 0;
+  const grand    = rental + 19 + insurance;
+  document.getElementById('sumTotal').textContent      = `₹${rental}`;
+  document.getElementById('sumGrandTotal').textContent = `₹${grand}`;
+  return { days, rental, grand };
 }
+
+window.applyCoupon = function() {
+  const code = document.getElementById('couponCode').value.trim().toUpperCase();
+  if (!code) return;
+  alert('Invalid or expired coupon code.');
+};
+
+document.getElementById('insuranceCheck').addEventListener('change', calcSummary);
 
 ['startDate', 'endDate'].forEach(id => document.getElementById(id).addEventListener('change', calcSummary));
 
@@ -287,13 +297,15 @@ document.getElementById('proceedPayBtn').addEventListener('click', () => {
 function updatePayAmount() {
   const s = document.getElementById('startDate').value;
   const e = document.getElementById('endDate').value;
-  let total = currentBike ? currentBike.price : 0;
+  let rental = currentBike ? currentBike.price : 0;
   if (s && e && currentBike) {
     const days = Math.max(1, Math.round((new Date(e) - new Date(s)) / 86400000));
-    total = days * currentBike.price;
+    rental = days * currentBike.price;
   }
-  document.getElementById('payAmountDisplay').textContent = `₹${total}`;
-  return total;
+  const insurance = document.getElementById('insuranceCheck').checked ? 39 : 0;
+  const grand = rental + 19 + insurance;
+  document.getElementById('payAmountDisplay').textContent = `₹${grand}`;
+  return grand;
 }
 
 // ── PAY TABS ──
@@ -340,7 +352,9 @@ async function saveBooking() {
   const s     = document.getElementById('startDate').value;
   const e     = document.getElementById('endDate').value;
   const days  = s && e ? Math.max(1, Math.round((new Date(e) - new Date(s)) / 86400000)) : 1;
-  const total = days * (currentBike ? currentBike.price : 0);
+  const rental = days * (currentBike ? currentBike.price : 0);
+  const insurance = document.getElementById('insuranceCheck').checked ? 39 : 0;
+  const total = rental + 19 + insurance;
   const pickupTime = document.getElementById('pickupTime')?.value || '10:00';
   const dropTime   = document.getElementById('dropTime')?.value   || '10:00';
 

@@ -132,9 +132,23 @@
         </div>
 
         <div class="booking-summary" id="bookingSummary">
-          <div class="summary-row"><span>Duration</span><span id="sumDays">– days</span></div>
-          <div class="summary-row"><span>Rate</span><span id="sumRate">&#8377;–/day</span></div>
-          <div class="summary-row total"><span>Total Rent</span><span id="sumTotal">&#8377;–</span></div>
+          <div class="coupon-row">
+            <input type="text" id="couponCode" placeholder="Enter Coupon Code" />
+            <button onclick="applyCoupon()">Apply</button>
+          </div>
+          <div class="summary-row"><span>Rental Charges</span><span id="sumTotal">&#8377;–</span></div>
+          <div class="summary-row"><span>Platform Charges</span><span>&#8377;19</span></div>
+          <div class="summary-row insurance-row">
+            <label><input type="checkbox" id="insuranceCheck" checked /> Ride <span class="ins-link">Insurance</span> (Basic Cover)</label>
+            <span>&#8377;39</span>
+          </div>
+          <div class="summary-row total"><span>Total Rent</span><span id="sumGrandTotal">&#8377;–</span></div>
+        </div>
+
+        <div class="know-before">
+          <div class="kb-title"><i class="fas fa-circle-info"></i> Know before you book</div>
+          <div class="kb-row"><span>Extra Km Charges</span><span>&#8377;3.50/Km</span></div>
+          <div class="kb-note">Late Return: &#8377;100 + double the hourly rental rate will be charged for late returns.</div>
         </div>
 
 
