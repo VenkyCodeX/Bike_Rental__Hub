@@ -274,20 +274,6 @@ const today = new Date().toISOString().split('T')[0];
 document.getElementById('startDate').min = today;
 document.getElementById('endDate').min   = today;
 
-// ── WHATSAPP BOOK ──
-document.getElementById('waBookBtn').addEventListener('click', e => {
-  e.preventDefault();
-  if (!currentBike) return;
-  const name  = document.getElementById('custName').value.trim() || 'Customer';
-  const from  = document.getElementById('startDate').value || 'TBD';
-  const to    = document.getElementById('endDate').value   || 'TBD';
-  const time  = document.getElementById('pickupTime')?.value || '10:00';
-  const days  = (from !== 'TBD' && to !== 'TBD') ? Math.max(1, Math.round((new Date(to) - new Date(from)) / 86400000)) : 1;
-  const total = days * currentBike.price;
-  const msg   = encodeURIComponent(`Hi, I want to rent *${currentBike.name}* from ${from} to ${to} (${days} day${days>1?'s':''}). Pickup time: ${time}. Total: \u20b9${total}. My name is ${name}. Please confirm. - Bike Rental Hub`);
-  window.open(`https://wa.me/919391265697?text=${msg}`, '_blank');
-});
-
 // ── PAYMENT METHOD SELECTION ──
 function validateStep1() {
   const name  = document.getElementById('custName').value.trim();
