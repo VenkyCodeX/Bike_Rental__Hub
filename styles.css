@@ -98,7 +98,126 @@ input, select, textarea { font-family: inherit; outline: none; }
 .hamburger.open span:nth-child(2) { opacity: 0; }
 .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
+/* ── TOP BAR ── */
+.top-bar {
+  background: #1c1c2e;
+  color: #fff;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 9px 5%;
+  font-size: 13px;
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 1001;
+}
+.top-bar strong { color: var(--orange); }
+.top-bar-btn {
+  background: var(--orange); color: #fff;
+  padding: 5px 16px; border-radius: 20px;
+  font-size: 12px; font-weight: 700;
+  white-space: nowrap;
+}
+.top-bar-btn:hover { opacity: 0.88; }
+
+/* push navbar below top bar */
+.navbar { top: 38px; }
+
 /* ── HERO ── */
+.hero-wrap {
+  position: relative;
+  margin-top: 108px;
+  height: 300px;
+  overflow: hidden;
+}
+.hero-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+}
+.hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to right, rgba(0,0,0,0.72) 55%, rgba(0,0,0,0.15) 100%);
+}
+.hero-text {
+  position: absolute;
+  top: 50%; left: 5%;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+.hero-text h1 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: clamp(26px, 7vw, 48px);
+  font-weight: 700; line-height: 1.15;
+  color: #fff; text-transform: uppercase;
+}
+.hero-text h1 span { color: var(--orange); }
+
+/* ── BOOKING CARD ── */
+.book-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 6px 28px rgba(0,0,0,0.12);
+  margin: -28px 4% 0;
+  position: relative; z-index: 10;
+  padding: 18px;
+}
+.book-tabs {
+  display: grid; grid-template-columns: 1fr 1fr;
+  background: #f0f0f0; border-radius: 10px;
+  padding: 4px; margin-bottom: 14px; gap: 4px;
+}
+.book-tab {
+  padding: 10px; border-radius: 8px;
+  font-size: 15px; font-weight: 600;
+  color: #666; background: none; cursor: pointer;
+  transition: all 0.2s;
+}
+.book-tab.active { background: var(--orange); color: #fff; }
+
+.book-field {
+  display: flex; align-items: center;
+  border: 1px solid #ddd; border-radius: 10px;
+  padding: 11px 14px; margin-bottom: 10px;
+  gap: 8px;
+}
+.book-field input {
+  flex: 1; border: none; background: none;
+  font-size: 14px; color: #111; outline: none;
+  min-width: 0;
+}
+.book-field i { color: #999; font-size: 15px; flex-shrink: 0; }
+
+.book-row {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px; margin-bottom: 10px;
+}
+.book-row .book-field { margin-bottom: 0; }
+
+.book-search-btn {
+  display: block; width: 100%;
+  background: var(--orange); color: #fff;
+  text-align: center; padding: 14px;
+  border-radius: 10px; font-size: 16px; font-weight: 700;
+  transition: opacity 0.2s;
+}
+.book-search-btn:hover { opacity: 0.88; }
+
+/* ── TAGLINE ── */
+.home-tagline {
+  padding: 28px 5% 4px;
+}
+.home-tagline h2 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: clamp(17px, 3.5vw, 24px);
+  font-weight: 700; color: #111;
+  margin-bottom: 10px; line-height: 1.3;
+}
+.svc-label {
+  color: var(--orange); font-weight: 700;
+  font-size: 15px; margin-bottom: 4px;
+}
+.svc-sub { font-size: 13px; color: #666; }
+
+/* ── HERO (old) kept for other pages ── */
 .hero {
   min-height: 100vh;
   display: flex; align-items: center;
@@ -112,31 +231,6 @@ input, select, textarea { font-family: inherit; outline: none; }
   z-index: 0;
 }
 .hero-content { position: relative; z-index: 1; width: 100%; }
-.hero-text { max-width: 640px; }
-
-.hero-badge {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: rgba(255,122,0,0.08);
-  border: 1px solid rgba(255,122,0,0.25);
-  color: var(--orange); padding: 6px 14px;
-  border-radius: 20px; font-size: 13px; font-weight: 600;
-  margin-bottom: 20px;
-}
-.hero-badge i { font-size: 12px; }
-
-.hero h1 {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: clamp(38px, 5.5vw, 64px);
-  font-weight: 700; line-height: 1.08;
-  margin-bottom: 18px; color: #111;
-}
-.hero h1 span { color: var(--orange); }
-
-.hero p {
-  font-size: 16px;
-  color: var(--text-muted); line-height: 1.75;
-  margin-bottom: 32px; max-width: 500px;
-}
 
 .btn-primary {
   display: inline-flex; align-items: center; gap: 8px;
@@ -147,23 +241,16 @@ input, select, textarea { font-family: inherit; outline: none; }
   transition: all var(--transition);
   box-shadow: 0 4px 24px rgba(255,122,0,0.3);
 }
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 36px rgba(255,122,0,0.45);
-}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 36px rgba(255,122,0,0.45); }
 
-.hero-stats {
-  display: flex; flex-wrap: wrap; gap: 32px;
-  margin-top: 48px; padding-top: 32px;
-  border-top: 1px solid var(--border);
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .top-bar { font-size: 11px; padding: 8px 4%; }
+  .navbar { top: 36px; }
+  .hero-wrap { margin-top: 106px; height: 240px; }
+  .hero-text h1 { font-size: clamp(22px, 8vw, 34px); }
+  .book-card { margin: -22px 3% 0; padding: 14px; }
 }
-.stat-item { text-align: left; }
-.stat-num {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 36px; font-weight: 700;
-  color: var(--orange); line-height: 1;
-}
-.stat-label { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
 
 /* ── SECTIONS ── */
 section { padding: 80px 5%; }
@@ -366,7 +453,7 @@ footer {
 
   .nav-links.open {
     display: flex; flex-direction: column;
-    position: fixed; top: 70px; left: 0; right: 0;
+    position: fixed; top: 108px; left: 0; right: 0;
     background: #ffffff;
     padding: 24px 5%;
     border-bottom: 1px solid var(--border);
@@ -374,19 +461,13 @@ footer {
     box-shadow: 0 8px 24px rgba(0,0,0,0.08);
   }
   .nav-links.open + .btn-book {
-    display: block;
-    margin: 0 5% 16px;
-    text-align: center;
+    display: block; margin: 0 5% 16px; text-align: center;
   }
-
-  .hero-stats { gap: 20px; }
   .footer-grid { grid-template-columns: 1fr; gap: 32px; }
 }
 
 @media (max-width: 480px) {
   section { padding: 60px 4%; }
-  .hero { padding: 90px 4% 50px; }
-  .stat-num { font-size: 28px; }
 }
 
 /* ── SAFETY SECTION ── */

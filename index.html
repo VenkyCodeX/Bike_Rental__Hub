@@ -12,11 +12,16 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
-    /* Page-specific overrides */
     .nav-links a[href="index.html"] { color: var(--orange); }
   </style>
 </head>
 <body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <span>Save Big with <strong>Monthly Bookings!</strong></span>
+  <a href="bikes.html" class="top-bar-btn">Explore Now</a>
+</div>
 
 <!-- NAVBAR -->
 <nav class="navbar" id="navbar">
@@ -40,37 +45,41 @@
 </nav>
 
 <!-- HERO -->
-<section class="hero" id="home">
-  <div class="hero-bg"></div>
-  <div class="hero-content">
-    <div class="hero-text">
-      <div class="hero-badge"><i class="fas fa-motorcycle"></i> Hyderabad's Trusted Bike Rental</div>
-      <h1>Bike Rental Hub –<br><span>Easy, Affordable</span> &amp; Fast</h1>
-      <p>Daily rentals at the best price. No hidden charges. Pick up or doorstep delivery available across Hyderabad.</p>
-      <a href="bikes.html" class="btn-primary">
-        <i class="fas fa-motorcycle"></i> View Bikes
-      </a>
-      <div class="hero-stats">
-        <div class="stat-item">
-          <div class="stat-num" data-target="500" data-suffix="+">0</div>
-          <div class="stat-label">Happy Riders</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num" data-target="20" data-suffix="+">0</div>
-          <div class="stat-label">Bike Models</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num" data-target="299" data-prefix="&#8377;">0</div>
-          <div class="stat-label">Starting/Day</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num" data-target="24" data-suffix="/7">0</div>
-          <div class="stat-label">Support</div>
-        </div>
-      </div>
-    </div>
+<div class="hero-wrap">
+  <img src="assets/Royal-Enfield.webp" alt="Bike Rental" class="hero-img" />
+  <div class="hero-overlay"></div>
+  <div class="hero-text">
+    <h1>NAVIGATE<br>THE CITY<br><span>ON</span> YOUR<br>OWN TERMS!</h1>
   </div>
-</section>
+</div>
+
+<!-- BOOKING CARD -->
+<div class="book-card">
+  <div class="book-tabs">
+    <button class="book-tab active" id="tabDaily" onclick="setTab('daily')">Daily</button>
+    <button class="book-tab" id="tabMonthly" onclick="setTab('monthly')">Monthly</button>
+  </div>
+  <div class="book-field">
+    <input type="text" value="Hyderabad" readonly />
+    <i class="fas fa-location-dot"></i>
+  </div>
+  <div class="book-row">
+    <div class="book-field"><input type="date" id="bkDate1" /><i class="fas fa-calendar"></i></div>
+    <div class="book-field"><input type="time" id="bkTime1" value="10:00" /><i class="fas fa-clock"></i></div>
+  </div>
+  <div class="book-row" id="bkReturnRow">
+    <div class="book-field"><input type="date" id="bkDate2" /><i class="fas fa-calendar"></i></div>
+    <div class="book-field"><input type="time" id="bkTime2" value="10:00" /><i class="fas fa-clock"></i></div>
+  </div>
+  <a href="bikes.html" class="book-search-btn">Search</a>
+</div>
+
+<!-- TAGLINE -->
+<div class="home-tagline">
+  <h2>Bike Rental Hub &ndash; Hyderabad's Trusted Bike &amp; Scooter Rental Service</h2>
+  <p class="svc-label">Our Services</p>
+  <p class="svc-sub">Your Bike, Your Way &ndash; Bike Rentals with No Complications</p>
+</div>
 
 <!-- WHY CHOOSE US -->
 <section class="why-us" id="why-us">
@@ -303,5 +312,16 @@
 </div>
 
 <script src="script.js"></script>
+<script>
+const t = new Date(), t2 = new Date(t.getTime()+86400000);
+const fmt = d => d.toISOString().split('T')[0];
+document.getElementById('bkDate1').value = fmt(t);
+document.getElementById('bkDate2').value = fmt(t2);
+function setTab(tab) {
+  document.getElementById('tabDaily').classList.toggle('active', tab==='daily');
+  document.getElementById('tabMonthly').classList.toggle('active', tab==='monthly');
+  document.getElementById('bkReturnRow').style.display = tab==='daily' ? 'grid' : 'none';
+}
+</script>
 </body>
 </html>
