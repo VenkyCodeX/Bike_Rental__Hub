@@ -550,7 +550,7 @@ footer {
 /* ── LIST VEHICLE ── */
 .list-vehicle-section {
   position: relative;
-  background: #1c1c2e url('assets/uploads/bg_home.jpg') center/cover no-repeat;
+  background: #1c1c2e url('assets/bg_home.jpg') center/cover no-repeat;
   padding: 80px 5%;
   display: flex; justify-content: flex-start;
 }
