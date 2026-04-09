@@ -21,7 +21,16 @@ function fmtDate(iso) {
 }
 
 function statusBadge(s) {
-  const map = { available: 'badge-green', rented: 'badge-red', maintenance: 'badge-yellow', confirmed: 'badge-blue', pending: 'badge-yellow', cancelled: 'badge-red' };
+  const map = {
+    available:   'badge-green',
+    rented:      'badge-red',
+    maintenance: 'badge-yellow',
+    confirmed:   'badge-blue',
+    pending:     'badge-yellow',
+    cancelled:   'badge-red',
+    running:     'badge-orange',
+    returned:    'badge-green'
+  };
   return `<span class="badge ${map[s] || 'badge-blue'}">${s.charAt(0).toUpperCase() + s.slice(1)}</span>`;
 }
 
@@ -141,6 +150,34 @@ async function renderDashboard() {
       </div>
     `;
 
+    // Running bikes
+    const running = bookings.filter(b => b.status === 'running');
+    $('runningCount').textContent = `${running.length} bike${running.length !== 1 ? 's' : ''} out`;
+    const runTbody = $('runningTbody');
+    const runEmpty = $('runningEmpty');
+    if (!running.length) {
+      runTbody.innerHTML = '';
+      runEmpty.classList.remove('hidden');
+    } else {
+      runEmpty.classList.add('hidden');
+      runTbody.innerHTML = running.map(b => `
+        <tr>
+          <td><code style="color:#f59e0b;font-size:12px">${b.bookingId}</code></td>
+          <td style="font-weight:600">${b.customer}</td>
+          <td>${b.phone}</td>
+          <td>${b.bike}</td>
+          <td>${fmtDate(b.to)}</td>
+          <td><strong>${b.dropTime || '–'}</strong></td>
+          <td>
+            <button class="btn-icon" style="background:rgba(74,222,128,0.15);color:#4ade80" onclick="markReturned('${b._id}','${b.bike}','${b.dropTime||''}')">
+              <i class="fas fa-check"></i> Returned
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // Recent bookings
     const recent = bookings.slice(0, 5);
     const tbody  = $('recentBookingsTbody');
     if (!recent.length) {
@@ -161,6 +198,41 @@ async function renderDashboard() {
   } catch (err) {
     console.error('Dashboard error:', err);
   }
+}
+
+// ── MARK RETURNED ──
+window.markReturned = function(id, bikeName, dropTime) {
+  showReturnPopup(id, bikeName);
+};
+
+function showReturnPopup(bookingId, bikeName) {
+  $('returnPopupMsg').textContent = `${bikeName} — Is the bike back?`;
+  $('returnPopupOverlay').classList.add('open');
+
+  $('returnYesBtn').onclick = async () => {
+    $('returnPopupOverlay').classList.remove('open');
+    const res = await apiFetch(`${API}/bookings/${bookingId}/status`, {
+      method: 'PATCH', body: JSON.stringify({ status: 'returned' })
+    });
+    if (res && res.ok) {
+      showToast(`${bikeName} marked as returned!`);
+      renderDashboard();
+    }
+  };
+  $('returnNoBtn').onclick = () => $('returnPopupOverlay').classList.remove('open');
+}
+
+// Auto popup at drop time
+function scheduleReturnPopups(bookings) {
+  const running = bookings.filter(b => b.status === 'running' && b.dropTime && b.to);
+  running.forEach(b => {
+    const dropDateTime = new Date(`${b.to}T${b.dropTime}:00`);
+    const now = new Date();
+    const diff = dropDateTime - now;
+    if (diff > 0 && diff < 86400000) { // within 24h
+      setTimeout(() => showReturnPopup(b._id, b.bike), diff);
+    }
+  });
 }
 
 // ── ADD BIKE ──
@@ -416,10 +488,13 @@ async function renderBookings() {
         <td>${fmtDate(b.from)}</td>
         <td>${fmtDate(b.to)}</td>
         <td>${b.pickupTime || '–'}</td>
+        <td>${b.dropTime || '–'}</td>
         <td style="color:#4ade80;font-weight:600">₹${(b.amount || 0).toLocaleString('en-IN')}</td>
         <td>${statusBadge(b.status || 'pending')}</td>
         <td>
-          ${b.status !== 'confirmed'  ? `<button class="btn-icon btn-edit"   onclick="updateStatus('${b._id}','confirmed')"><i class="fas fa-check"></i></button>` : ''}
+          ${b.status === 'confirmed' ? `<button class="btn-icon" style="background:rgba(245,158,11,0.15);color:#f59e0b;margin-right:4px" onclick="updateStatus('${b._id}','running')" title="Mark Running"><i class="fas fa-motorcycle"></i></button>` : ''}
+          ${b.status === 'running'   ? `<button class="btn-icon" style="background:rgba(74,222,128,0.15);color:#4ade80;margin-right:4px" onclick="markReturned('${b._id}','${b.bike}','${b.dropTime||''}')" title="Mark Returned"><i class="fas fa-check"></i></button>` : ''}
+          ${b.status !== 'confirmed' && b.status !== 'running' ? `<button class="btn-icon btn-edit" onclick="updateStatus('${b._id}','confirmed')"><i class="fas fa-check"></i></button>` : ''}
           ${b.status !== 'cancelled' ? `<button class="btn-icon btn-delete" onclick="updateStatus('${b._id}','cancelled')" style="margin-left:4px"><i class="fas fa-xmark"></i></button>` : ''}
         </td>
       </tr>

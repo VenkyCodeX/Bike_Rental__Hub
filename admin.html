@@ -58,6 +58,29 @@
     <!-- DASHBOARD PAGE -->
     <div class="page active" id="page-dashboard">
       <div class="stats-grid" id="dashStats"></div>
+
+      <!-- CURRENTLY RUNNING -->
+      <div class="section-card" style="margin-bottom:24px;border-left:4px solid #f59e0b">
+        <div class="section-card-header">
+          <h3><i class="fas fa-motorcycle" style="color:#f59e0b;margin-right:8px"></i>Currently Running Bikes</h3>
+          <span id="runningCount" style="font-size:13px;color:var(--text-muted)"></span>
+        </div>
+        <div class="section-card-body">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Booking ID</th><th>Customer</th><th>Phone</th><th>Bike</th><th>Drop Date</th><th>Drop Time</th><th>Action</th></tr>
+              </thead>
+              <tbody id="runningTbody"></tbody>
+            </table>
+          </div>
+          <div class="empty-state hidden" id="runningEmpty">
+            <i class="fas fa-check-circle" style="color:#4ade80"></i>
+            <p>No bikes currently out on rides.</p>
+          </div>
+        </div>
+      </div>
+
       <div class="section-card">
         <div class="section-card-header">
           <h3><i class="fas fa-clock" style="color:var(--orange);margin-right:8px"></i>Recent Bookings</h3>
@@ -245,7 +268,7 @@
               <thead>
                 <tr>
                   <th>ID</th><th>Customer</th><th>Phone</th>
-                  <th>Bike</th><th>From</th><th>To</th><th>Pickup</th><th>Amount</th><th>Status</th><th>Actions</th>
+                  <th>Bike</th><th>From</th><th>To</th><th>Pickup</th><th>Drop</th><th>Amount</th><th>Status</th><th>Actions</th>
                 </tr>
               </thead>
               <tbody id="bookingsTbody"></tbody>
@@ -430,6 +453,19 @@
         <button type="button" id="editCancelBtn" style="padding:11px 20px;border-radius:8px;background:var(--dark4);color:var(--text-muted);font-size:14px">Cancel</button>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- RETURN CONFIRMATION POPUP -->
+<div class="admin-modal-overlay" id="returnPopupOverlay">
+  <div class="admin-modal" style="max-width:400px;text-align:center">
+    <div style="font-size:48px;margin-bottom:12px">🏍️</div>
+    <h3 style="margin-bottom:8px">Is the bike returned?</h3>
+    <p id="returnPopupMsg" style="font-size:14px;color:var(--text-muted);margin-bottom:24px"></p>
+    <div style="display:flex;gap:10px;justify-content:center">
+      <button id="returnYesBtn" style="background:#4ade80;color:#111;padding:11px 28px;border-radius:8px;font-size:14px;font-weight:700;border:none;cursor:pointer">✅ Yes, Returned</button>
+      <button id="returnNoBtn" style="background:var(--dark4);color:var(--text-muted);padding:11px 20px;border-radius:8px;font-size:14px;border:none;cursor:pointer">Not Yet</button>
+    </div>
   </div>
 </div>
 

@@ -194,6 +194,8 @@ function resetModal() {
   });
   const pt = document.getElementById('pickupTime');
   if (pt) pt.value = '10:00';
+  const dt = document.getElementById('dropTime');
+  if (dt) dt.value = '10:00';
   const tc = document.getElementById('termsCheck');
   if (tc) tc.checked = false;
   document.getElementById('sumDays').textContent  = '– days';
@@ -340,6 +342,7 @@ async function saveBooking() {
   const days  = s && e ? Math.max(1, Math.round((new Date(e) - new Date(s)) / 86400000)) : 1;
   const total = days * (currentBike ? currentBike.price : 0);
   const pickupTime = document.getElementById('pickupTime')?.value || '10:00';
+  const dropTime   = document.getElementById('dropTime')?.value   || '10:00';
 
   const activePayTab = document.querySelector('.pay-tab.active');
   const payMethod    = activePayTab ? activePayTab.dataset.pay : 'upi';
@@ -355,6 +358,7 @@ async function saveBooking() {
       from:       s,
       to:         e,
       pickupTime,
+      dropTime,
       amount:     total,
       payMethod
     })

@@ -3,11 +3,10 @@ const Booking = require('../models/Booking');
 // POST /api/bookings
 const createBooking = async (req, res) => {
   try {
-    const { customer, phone, bike, bikeId, from, to, amount, payMethod, pickupTime } = req.body;
+    const { customer, phone, bike, bikeId, from, to, amount, payMethod, pickupTime, dropTime } = req.body;
     if (!customer || !phone || !bike || !from || !to || !amount)
       return res.status(400).json({ message: 'All booking fields are required' });
-
-    const booking = await Booking.create({ customer, phone, bike, bikeId, from, to, amount, payMethod, pickupTime });
+    const booking = await Booking.create({ customer, phone, bike, bikeId, from, to, amount, payMethod, pickupTime, dropTime });
     res.status(201).json(booking);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -39,11 +38,23 @@ const getStats = async (req, res) => {
 // PATCH /api/bookings/:id/status  (admin)
 const updateBookingStatus = async (req, res) => {
   try {
-    const { status } = req.body;
-    if (!['confirmed', 'pending', 'cancelled'].includes(status))
+    const { status, dropTime } = req.body;
+    if (!['confirmed', 'pending', 'cancelled', 'running', 'returned'].includes(status))
       return res.status(400).json({ message: 'Invalid status' });
-    const booking = await Booking.findByIdAndUpdate(req.params.id, { status }, { new: true });
+
+    const update = { status };
+    if (dropTime) update.dropTime = dropTime;
+
+    const booking = await Booking.findByIdAndUpdate(req.params.id, update, { new: true });
     if (!booking) return res.status(404).json({ message: 'Booking not found' });
+
+    // Auto-update bike status
+    if (booking.bikeId) {
+      const Bike = require('../models/Bike');
+      if (status === 'running')  await Bike.findByIdAndUpdate(booking.bikeId, { status: 'rented' });
+      if (status === 'returned') await Bike.findByIdAndUpdate(booking.bikeId, { status: 'available' });
+    }
+
     res.json(booking);
   } catch (err) {
     res.status(500).json({ message: err.message });
