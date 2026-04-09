@@ -157,16 +157,17 @@
           <label for="termsCheck">I agree to the <a href="terms.html" target="_blank">Terms &amp; Conditions</a> and will bring valid DL + ID at pickup.</label>
         </div>
 
+        <div class="form-group" style="margin-bottom:16px;">
+          <label>Payment Preference</label>
+          <select id="payPreference">
+            <option value="online">UPI / Online</option>
+            <option value="cash">Cash on Pickup</option>
+          </select>
+        </div>
+
         <div class="step-actions">
-          <button class="btn-pay-method" id="btnOnlinePay">
-            <i class="fas fa-credit-card"></i>
-            <span>Online Payment</span>
-            <small>UPI / Card / QR</small>
-          </button>
-          <button class="btn-pay-method cash" id="btnCashPickup">
-            <i class="fas fa-hand-holding-dollar"></i>
-            <span>Cash on Pickup</span>
-            <small>Pay when you collect</small>
+          <button class="btn-primary" id="proceedPayBtn" style="flex:1;justify-content:center;">
+            <i class="fas fa-arrow-right"></i> Proceed
           </button>
         </div>
       </div>

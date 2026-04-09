@@ -301,42 +301,40 @@ function validateStep1() {
   return true;
 }
 
-document.getElementById('btnOnlinePay').addEventListener('click', () => {
+document.getElementById('proceedPayBtn').addEventListener('click', () => {
   if (!validateStep1()) return;
-  updatePayAmount();
-  showStep(2);
-});
-
-document.getElementById('btnCashPickup').addEventListener('click', () => {
-  if (!validateStep1()) return;
-  // populate cash summary
-  const s = document.getElementById('startDate').value;
-  const e = document.getElementById('endDate').value;
-  const days = s && e ? Math.max(1, Math.round((new Date(e) - new Date(s)) / 86400000)) : 1;
-  const rental = days * (currentBike ? currentBike.price : 0);
-  const insurance = document.getElementById('insuranceCheck').checked ? 39 : 0;
-  const grand = rental + 19 + insurance;
-  const pickup = document.getElementById('pickupTime').value || '10:00';
-  document.getElementById('cashBikeSummary').innerHTML = `
-    <div class="cash-bike-card">
-      <img src="${currentBike.img}" alt="${currentBike.name}" />
-      <div class="cash-bike-info">
-        <h4>${currentBike.name}</h4>
-        <div class="cash-stars">${'★'.repeat(Math.round(currentBike.rating||4))}${'☆'.repeat(5-Math.round(currentBike.rating||4))} <span>${currentBike.rating||'4.5'}</span></div>
-        <p><i class="fas fa-location-dot"></i> ${currentBike.location || 'Karwan East, Hyderabad'}</p>
+  const pref = document.getElementById('payPreference').value;
+  if (pref === 'cash') {
+    const s = document.getElementById('startDate').value;
+    const e = document.getElementById('endDate').value;
+    const days = s && e ? Math.max(1, Math.round((new Date(e) - new Date(s)) / 86400000)) : 1;
+    const rental = days * (currentBike ? currentBike.price : 0);
+    const insurance = document.getElementById('insuranceCheck').checked ? 39 : 0;
+    const grand = rental + 19 + insurance;
+    const pickup = document.getElementById('pickupTime').value || '10:00';
+    document.getElementById('cashBikeSummary').innerHTML = `
+      <div class="cash-bike-card">
+        <img src="${currentBike.img}" alt="${currentBike.name}" />
+        <div class="cash-bike-info">
+          <h4>${currentBike.name}</h4>
+          <div class="cash-stars">${'★'.repeat(Math.round(currentBike.rating||4))}${'☆'.repeat(5-Math.round(currentBike.rating||4))} <span>${currentBike.rating||'4.5'}</span></div>
+          <p><i class="fas fa-location-dot"></i> ${currentBike.location || 'Karwan East, Hyderabad'}</p>
+        </div>
       </div>
-    </div>
-    <div class="cash-summary-rows">
-      <div class="cash-row"><span>Duration</span><span>${days} day${days>1?'s':''}</span></div>
-      <div class="cash-row"><span>Pickup Date</span><span>${s}</span></div>
-      <div class="cash-row"><span>Pickup Time</span><span>${pickup}</span></div>
-      <div class="cash-row"><span>Rental Charges</span><span>&#8377;${rental}</span></div>
-      <div class="cash-row"><span>Platform Charges</span><span>&#8377;19</span></div>
-      ${insurance ? `<div class="cash-row"><span>Insurance</span><span>&#8377;${insurance}</span></div>` : ''}
-      <div class="cash-row total"><span>Total (Pay at Pickup)</span><span>&#8377;${grand}</span></div>
-    </div>
-  `;
-  showStep(1, 'cash');
+      <div class="cash-summary-rows">
+        <div class="cash-row"><span>Duration</span><span>${days} day${days>1?'s':''}</span></div>
+        <div class="cash-row"><span>Pickup Date</span><span>${s}</span></div>
+        <div class="cash-row"><span>Pickup Time</span><span>${pickup}</span></div>
+        <div class="cash-row"><span>Rental Charges</span><span>&#8377;${rental}</span></div>
+        <div class="cash-row"><span>Platform Charges</span><span>&#8377;19</span></div>
+        ${insurance ? `<div class="cash-row"><span>Insurance</span><span>&#8377;${insurance}</span></div>` : ''}
+        <div class="cash-row total"><span>Total (Pay at Pickup)</span><span>&#8377;${grand}</span></div>
+      </div>`;
+    showStep(1, 'cash');
+  } else {
+    updatePayAmount();
+    showStep(2);
+  }
 });
 
 document.getElementById('confirmCashBtn').addEventListener('click', () => {
