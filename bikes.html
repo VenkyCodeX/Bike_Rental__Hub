@@ -158,14 +158,22 @@
         </div>
 
         <div class="step-actions">
-          <button class="btn-primary" id="proceedPayBtn" style="flex:1;justify-content:center;">
-            <i class="fas fa-credit-card"></i> Proceed to Pay
+          <button class="btn-pay-method" id="btnOnlinePay">
+            <i class="fas fa-credit-card"></i>
+            <span>Online Payment</span>
+            <small>UPI / Card / QR</small>
+          </button>
+          <button class="btn-pay-method cash" id="btnCashPickup">
+            <i class="fas fa-hand-holding-dollar"></i>
+            <span>Cash on Pickup</span>
+            <small>Pay when you collect</small>
           </button>
         </div>
       </div>
 
-      <!-- STEP 2: PAYMENT -->
+      <!-- STEP 2: ONLINE PAYMENT -->
       <div class="step hidden" id="step2">
+        <button class="back-btn" onclick="showStep(1)"><i class="fas fa-arrow-left"></i> Back</button>
         <h3 class="step-title"><i class="fas fa-lock"></i> Secure Payment</h3>
         <div class="pay-amount-display" id="payAmountDisplay"></div>
 
@@ -225,6 +233,20 @@
           <i class="fas fa-lock"></i> Pay Now
         </button>
         <p class="ssl-note"><i class="fas fa-shield-halved"></i> 256-bit SSL encrypted · 100% secure</p>
+      </div>
+
+      <!-- STEP 2B: CASH ON PICKUP -->
+      <div class="step hidden" id="step2b">
+        <button class="back-btn" onclick="showStep(1)"><i class="fas fa-arrow-left"></i> Back</button>
+        <h3 class="step-title"><i class="fas fa-hand-holding-dollar"></i> Cash on Pickup</h3>
+        <div class="cash-bike-summary" id="cashBikeSummary"></div>
+        <div class="cash-note">
+          <i class="fas fa-circle-info"></i>
+          Pay the total amount in cash when you pick up the bike. No advance required.
+        </div>
+        <button class="btn-primary" id="confirmCashBtn" style="width:100%;justify-content:center;margin-top:16px;">
+          <i class="fab fa-whatsapp"></i> Confirm Booking via WhatsApp
+        </button>
       </div>
 
       <!-- STEP 3: SUCCESS -->

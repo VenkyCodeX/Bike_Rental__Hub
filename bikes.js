@@ -234,8 +234,16 @@ function switchTab(name) {
 }
 
 // ── STEPS ──
-function showStep(n) {
-  [1, 2, 3].forEach(i => document.getElementById(`step${i}`).classList.toggle('hidden', i !== n));
+function showStep(n, sub) {
+  ['step1','step2','step2b','step3'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('hidden');
+  });
+  if (sub === 'cash') {
+    document.getElementById('step2b').classList.remove('hidden');
+  } else {
+    document.getElementById(`step${n}`).classList.remove('hidden');
+  }
 }
 
 // ── DATE → SUMMARY ──
@@ -280,18 +288,69 @@ document.getElementById('waBookBtn').addEventListener('click', e => {
   window.open(`https://wa.me/919391265697?text=${msg}`, '_blank');
 });
 
-// ── PROCEED TO PAY ──
-document.getElementById('proceedPayBtn').addEventListener('click', () => {
+// ── PAYMENT METHOD SELECTION ──
+function validateStep1() {
   const name  = document.getElementById('custName').value.trim();
   const phone = document.getElementById('custPhone').value.trim();
   const from  = document.getElementById('startDate').value;
   const to    = document.getElementById('endDate').value;
   const terms = document.getElementById('termsCheck').checked;
-  if (!name || !phone || !from || !to) { alert('Please fill in all fields before proceeding.'); return; }
-  if (new Date(to) < new Date(from))   { alert('End date must be after start date.'); return; }
-  if (!terms) { alert('Please agree to the Terms & Conditions before proceeding.'); return; }
+  if (!name || !phone || !from || !to) { alert('Please fill in all fields before proceeding.'); return false; }
+  if (new Date(to) < new Date(from))   { alert('End date must be after start date.'); return false; }
+  if (!terms) { alert('Please agree to the Terms & Conditions before proceeding.'); return false; }
+  return true;
+}
+
+document.getElementById('btnOnlinePay').addEventListener('click', () => {
+  if (!validateStep1()) return;
   updatePayAmount();
   showStep(2);
+});
+
+document.getElementById('btnCashPickup').addEventListener('click', () => {
+  if (!validateStep1()) return;
+  // populate cash summary
+  const s = document.getElementById('startDate').value;
+  const e = document.getElementById('endDate').value;
+  const days = s && e ? Math.max(1, Math.round((new Date(e) - new Date(s)) / 86400000)) : 1;
+  const rental = days * (currentBike ? currentBike.price : 0);
+  const insurance = document.getElementById('insuranceCheck').checked ? 39 : 0;
+  const grand = rental + 19 + insurance;
+  const pickup = document.getElementById('pickupTime').value || '10:00';
+  document.getElementById('cashBikeSummary').innerHTML = `
+    <div class="cash-bike-card">
+      <img src="${currentBike.img}" alt="${currentBike.name}" />
+      <div class="cash-bike-info">
+        <h4>${currentBike.name}</h4>
+        <div class="cash-stars">${'★'.repeat(Math.round(currentBike.rating||4))}${'☆'.repeat(5-Math.round(currentBike.rating||4))} <span>${currentBike.rating||'4.5'}</span></div>
+        <p><i class="fas fa-location-dot"></i> ${currentBike.location || 'Karwan East, Hyderabad'}</p>
+      </div>
+    </div>
+    <div class="cash-summary-rows">
+      <div class="cash-row"><span>Duration</span><span>${days} day${days>1?'s':''}</span></div>
+      <div class="cash-row"><span>Pickup Date</span><span>${s}</span></div>
+      <div class="cash-row"><span>Pickup Time</span><span>${pickup}</span></div>
+      <div class="cash-row"><span>Rental Charges</span><span>&#8377;${rental}</span></div>
+      <div class="cash-row"><span>Platform Charges</span><span>&#8377;19</span></div>
+      ${insurance ? `<div class="cash-row"><span>Insurance</span><span>&#8377;${insurance}</span></div>` : ''}
+      <div class="cash-row total"><span>Total (Pay at Pickup)</span><span>&#8377;${grand}</span></div>
+    </div>
+  `;
+  showStep(1, 'cash');
+});
+
+document.getElementById('confirmCashBtn').addEventListener('click', () => {
+  const name  = document.getElementById('custName').value.trim() || 'Customer';
+  const phone = document.getElementById('custPhone').value.trim();
+  const from  = document.getElementById('startDate').value || 'TBD';
+  const to    = document.getElementById('endDate').value   || 'TBD';
+  const time  = document.getElementById('pickupTime').value || '10:00';
+  const days  = (from !== 'TBD' && to !== 'TBD') ? Math.max(1, Math.round((new Date(to) - new Date(from)) / 86400000)) : 1;
+  const rental = days * (currentBike ? currentBike.price : 0);
+  const insurance = document.getElementById('insuranceCheck').checked ? 39 : 0;
+  const grand = rental + 19 + insurance;
+  const msg = encodeURIComponent(`Hi, I want to book *${currentBike.name}* (Cash on Pickup)\nFrom: ${from} To: ${to} (${days} day${days>1?'s':''})\nPickup Time: ${time}\nTotal: \u20b9${grand}\nName: ${name}\nPhone: ${phone}\nPlease confirm my booking. - Bike Rental Hub`);
+  window.open(`https://wa.me/919391265697?text=${msg}`, '_blank');
 });
 
 function updatePayAmount() {
