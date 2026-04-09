@@ -1,6 +1,6 @@
 'use strict';
 
-const API = window.location.hostname === 'localhost' ? '/api' : 'https://bike-rental-hub.onrender.com/api';
+const API = '/api';
 
 // ── HAMBURGER ──
 const hamburger = document.getElementById('hamburger');
