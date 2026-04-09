@@ -83,6 +83,34 @@
   gap: 24px;
 }
 
+/* ── STATUS OVERLAYS ── */
+.card-maintenance { border-color: rgba(239,68,68,0.4) !important; }
+.card-rented      { border-color: rgba(180,180,180,0.5) !important; }
+
+.card-status-overlay {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 4px; text-align: center;
+  padding: 12px;
+  z-index: 2;
+}
+.card-status-overlay i    { font-size: 28px; margin-bottom: 4px; }
+.card-status-overlay span { font-size: 14px; font-weight: 700; }
+.card-status-overlay small { font-size: 11px; opacity: 0.9; }
+
+.overlay-maintenance {
+  background: rgba(239,68,68,0.18);
+  color: #b91c1c;
+}
+.overlay-maintenance i { color: #dc2626; }
+
+.overlay-rented {
+  background: rgba(150,150,150,0.22);
+  color: #444;
+}
+.overlay-rented i { color: #666; }
+
 /* ── BIKE CARD ── */
 .bike-card {
   background: var(--card-bg);

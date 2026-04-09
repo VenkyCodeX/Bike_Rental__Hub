@@ -304,6 +304,11 @@ window.openEditModal = async function (id) {
     $('editBikeBadge').value    = bike.badge || 'Available';
     $('editBikeEngine').value   = bike.engine || '';
     $('editBikeDesc').value     = bike.desc || '';
+    $('editMaintFrom').value    = bike.maintenanceFrom || '';
+    $('editMaintUntil').value   = bike.maintenanceUntil || '';
+    $('editRentedFrom').value   = bike.rentedFrom || '';
+    $('editRentedUntil').value  = bike.rentedUntil || '';
+    toggleStatusDates(bike.status);
     $('editModalOverlay').classList.add('open');
   } catch (err) {
     console.error(err);
@@ -315,6 +320,13 @@ $('editModalClose').addEventListener('click', closeEditModal);
 $('editCancelBtn').addEventListener('click', closeEditModal);
 $('editModalOverlay').addEventListener('click', e => { if (e.target === $('editModalOverlay')) closeEditModal(); });
 
+window.toggleStatusDates = function(status) {
+  const maintFields  = [$('editMaintFromWrap'),  $('editMaintUntilWrap')];
+  const rentedFields = [$('editRentedFromWrap'), $('editRentedUntilWrap')];
+  maintFields.forEach(el  => el.classList.toggle('hidden', status !== 'maintenance'));
+  rentedFields.forEach(el => el.classList.toggle('hidden', status !== 'rented'));
+};
+
 $('editBikeForm').addEventListener('submit', async e => {
   e.preventDefault();
   const id  = $('editBikeId').value;
@@ -322,15 +334,19 @@ $('editBikeForm').addEventListener('submit', async e => {
   btn.disabled = true;
 
   const payload = {
-    name:     $('editBikeName').value.trim(),
-    category: $('editBikeCategory').value,
-    price:    +$('editBikePrice').value,
-    location: $('editBikeLocation').value.trim(),
-    status:   $('editBikeStatus').value,
-    img:      $('editBikeImg').value.trim(),
-    badge:    $('editBikeBadge').value,
-    engine:   $('editBikeEngine').value.trim(),
-    desc:     $('editBikeDesc').value.trim()
+    name:             $('editBikeName').value.trim(),
+    category:         $('editBikeCategory').value,
+    price:            +$('editBikePrice').value,
+    location:         $('editBikeLocation').value.trim(),
+    status:           $('editBikeStatus').value,
+    img:              $('editBikeImg').value.trim(),
+    badge:            $('editBikeBadge').value,
+    engine:           $('editBikeEngine').value.trim(),
+    desc:             $('editBikeDesc').value.trim(),
+    maintenanceFrom:  $('editMaintFrom').value,
+    maintenanceUntil: $('editMaintUntil').value,
+    rentedFrom:       $('editRentedFrom').value,
+    rentedUntil:      $('editRentedUntil').value
   };
 
   try {

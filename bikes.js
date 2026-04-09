@@ -78,30 +78,55 @@ function renderBikes() {
   }
   noRes.classList.add('hidden');
 
-  grid.innerHTML = bikes.map((b, i) => `
-    <div class="bike-card" style="animation-delay:${i * 0.06}s">
+  grid.innerHTML = bikes.map((b, i) => {
+    const isMaint  = b.status === 'maintenance';
+    const isRented = b.status === 'rented';
+
+    let statusOverlay = '';
+    if (isMaint) {
+      const from  = b.maintenanceFrom  ? `From: ${b.maintenanceFrom}`  : '';
+      const until = b.maintenanceUntil ? `Available: ${b.maintenanceUntil}` : '';
+      statusOverlay = `<div class="card-status-overlay overlay-maintenance">
+        <i class="fas fa-wrench"></i>
+        <span>Under Maintenance</span>
+        ${from  ? `<small>${from}</small>`  : ''}
+        ${until ? `<small>${until}</small>` : ''}
+      </div>`;
+    } else if (isRented) {
+      const from  = b.rentedFrom  ? `From: ${b.rentedFrom}`  : '';
+      const until = b.rentedUntil ? `Available: ${b.rentedUntil}` : '';
+      statusOverlay = `<div class="card-status-overlay overlay-rented">
+        <i class="fas fa-motorcycle"></i>
+        <span>Currently Rented</span>
+        ${from  ? `<small>${from}</small>`  : ''}
+        ${until ? `<small>${until}</small>` : ''}
+      </div>`;
+    }
+
+    return `
+    <div class="bike-card ${isMaint ? 'card-maintenance' : isRented ? 'card-rented' : ''}" style="animation-delay:${i * 0.06}s">
       <div class="card-img-wrap">
         <img src="${b.img}" alt="${b.name}" loading="lazy" />
         <span class="card-badge ${badgeClass(b.badge)}">${b.badge}</span>
-        <span class="card-status status-${b.status}">${b.status.charAt(0).toUpperCase() + b.status.slice(1)}</span>
+        ${statusOverlay}
       </div>
       <div class="card-body">
         <div class="card-name">${b.name}</div>
         <div class="card-location"><i class="fas fa-location-dot"></i>${b.location}</div>
         <div class="card-meta">
-          <div class="card-price">₹${b.price}<small>/day</small></div>
+          <div class="card-price">&#8377;${b.price}<small>/day</small></div>
           <div class="card-rating">
             ${starsHTML(b.rating)}
             <span>(${b.reviews})</span>
           </div>
         </div>
         <div class="card-actions">
-          <button class="btn-book-card" onclick="openModal('${b._id}','book')">Book Now</button>
-          <button class="btn-pay-card"  onclick="openModal('${b._id}','pay')">Pay Now</button>
+          <button class="btn-book-card" onclick="openModal('${b._id}','book')" ${isMaint || isRented ? 'disabled style="opacity:0.5;cursor:not-allowed"' : ''}>Book Now</button>
+          <button class="btn-pay-card"  onclick="openModal('${b._id}','pay')"  ${isMaint || isRented ? 'disabled style="opacity:0.5;cursor:not-allowed"' : ''}>Pay Now</button>
         </div>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
 // ── FILTERS ──

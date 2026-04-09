@@ -268,7 +268,7 @@
         </div>
         <div class="form-group">
           <label>Status</label>
-          <select id="editBikeStatus">
+          <select id="editBikeStatus" onchange="toggleStatusDates(this.value)">
             <option value="available">Available</option>
             <option value="rented">Rented</option>
             <option value="maintenance">Maintenance</option>
@@ -277,6 +277,24 @@
         <div class="form-group">
           <label>Image URL</label>
           <input type="url" id="editBikeImg" />
+        </div>
+        <!-- Maintenance dates -->
+        <div class="form-group hidden" id="editMaintFromWrap">
+          <label>Maintenance From</label>
+          <input type="date" id="editMaintFrom" />
+        </div>
+        <div class="form-group hidden" id="editMaintUntilWrap">
+          <label>Available From (Maintenance Until)</label>
+          <input type="date" id="editMaintUntil" />
+        </div>
+        <!-- Rented dates -->
+        <div class="form-group hidden" id="editRentedFromWrap">
+          <label>Rented From</label>
+          <input type="date" id="editRentedFrom" />
+        </div>
+        <div class="form-group hidden" id="editRentedUntilWrap">
+          <label>Available From (Rented Until)</label>
+          <input type="date" id="editRentedUntil" />
         </div>
         <div class="form-group">
           <label>Badge</label>

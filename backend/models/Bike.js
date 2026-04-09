@@ -11,7 +11,11 @@ const BikeSchema = new mongoose.Schema({
   rating:   { type: Number, default: 4.5, min: 0, max: 5 },
   reviews:  { type: Number, default: 0 },
   engine:   { type: String, default: '' },
-  desc:     { type: String, default: '' }
+  desc:     { type: String, default: '' },
+  maintenanceFrom:  { type: String, default: '' },
+  maintenanceUntil: { type: String, default: '' },
+  rentedFrom:       { type: String, default: '' },
+  rentedUntil:      { type: String, default: '' }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Bike', BikeSchema);
