@@ -14,7 +14,9 @@ app.use(cors({
     'http://localhost:5000',
     'http://localhost:3000',
     'https://venkycodex.github.io',
-    'https://bike-rental-hub.onrender.com'
+    'https://bike-rental-hub.onrender.com',
+    'https://bikerentalhub.co.in',
+    'https://www.bikerentalhub.co.in'
   ],
   credentials: true
 }));
