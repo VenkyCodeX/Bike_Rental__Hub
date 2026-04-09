@@ -217,7 +217,7 @@ $('addBikeForm').addEventListener('submit', async e => {
       img:      imgUrl,
       desc:     $('bikeDesc').value.trim(),
       transmission:     $('bikeTransmission').value,
-      seats:            $('bikeSeats').value,
+      seats:            $('bikeSeats').value ? $('bikeSeats').value + ' Seater' : '2 Seater',
       fuelType:         $('bikeFuelType').value,
       availableAt:      $('bikeAvailableAt').value.trim(),
       kmLimit:          +$('bikeKmLimit').value || 0,

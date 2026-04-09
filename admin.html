@@ -103,7 +103,7 @@
                 </select>
               </div>
               <div class="form-group">
-                <label>Price per Day (₹) *</label>
+                <label>Price per Day (&#8377;) *</label>
                 <input type="number" id="bikePrice" placeholder="e.g. 699" min="1" required />
               </div>
               <div class="form-group">
@@ -122,6 +122,48 @@
                   <option value="maintenance">Maintenance</option>
                 </select>
               </div>
+              <div class="form-group">
+                <label>Transmission</label>
+                <select id="bikeTransmission">
+                  <option value="Manual">Manual</option>
+                  <option value="Automatic">Automatic</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Seats</label>
+                <input type="number" id="bikeSeats" placeholder="2" min="1" value="2" />
+              </div>
+              <div class="form-group">
+                <label>Fuel Type</label>
+                <select id="bikeFuelType">
+                  <option value="Petrol">Petrol</option>
+                  <option value="Diesel">Diesel</option>
+                  <option value="Electric">Electric</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Fuel Included?</label>
+                <select id="bikeFuelIncluded">
+                  <option value="false">Fuel Excluded</option>
+                  <option value="true">Fuel Included</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>KM Limit / Day</label>
+                <input type="number" id="bikeKmLimit" placeholder="0" min="0" value="0" />
+              </div>
+              <div class="form-group">
+                <label>Extra Charge / KM (&#8377;)</label>
+                <input type="number" id="bikeExtraPerKm" placeholder="0" min="0" value="0" />
+              </div>
+              <div class="form-group">
+                <label>Deposit (&#8377;)</label>
+                <input type="number" id="bikeDeposit" placeholder="0" min="0" value="0" />
+              </div>
+              <div class="form-group">
+                <label>Manufactured Year</label>
+                <input type="number" id="bikeYear" placeholder="e.g. 2020" min="1990" max="2030" />
+              </div>
               <div class="form-group full">
                 <label>Image URL</label>
                 <input type="url" id="bikeImgUrl" placeholder="https://…" />
@@ -133,66 +175,20 @@
                 <label>Or Upload Image</label>
                 <input type="file" id="bikeImgFile" accept="image/*" />
               </div>
-              <div class="form-group full">
-                <label>Description</label>
-                <textarea id="bikeDesc" rows="3" placeholder="Brief description of the bike…"></textarea>
-              </div>
-              <!-- New fields -->
-              <div class="form-group">
-                <label>Transmission</label>
-                <select id="bikeTransmission">
-                  <option value="Manual">Manual</option>
-                  <option value="Automatic">Automatic</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Seats</label>
-                <select id="bikeSeats">
-                  <option value="2 Seater">2 Seater</option>
-                  <option value="1 Seater">1 Seater</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Fuel Type</label>
-                <select id="bikeFuelType">
-                  <option value="Petrol">Petrol</option>
-                  <option value="Diesel">Diesel</option>
-                  <option value="Electric">Electric</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Available At (Address)</label>
-                <input type="text" id="bikeAvailableAt" placeholder="e.g. Karwan East, Hyderabad" />
-              </div>
-              <div class="form-group">
-                <label>KM Limit / Day</label>
-                <input type="number" id="bikeKmLimit" placeholder="e.g. 80" min="0" />
-              </div>
-              <div class="form-group">
-                <label>Extra Charge / KM (&#8377;)</label>
-                <input type="number" id="bikeExtraPerKm" placeholder="e.g. 2" min="0" />
-              </div>
-              <div class="form-group">
-                <label>Deposit (&#8377;)</label>
-                <input type="number" id="bikeDeposit" placeholder="e.g. 500" min="0" />
-              </div>
-              <div class="form-group">
-                <label>Manufactured Year</label>
-                <input type="text" id="bikeYear" placeholder="e.g. 2020" />
-              </div>
-              <div class="form-group">
-                <label>Fuel</label>
-                <select id="bikeFuelIncluded">
-                  <option value="false">Fuel Excluded</option>
-                  <option value="true">Fuel Included</option>
-                </select>
-              </div>
               <div class="form-group">
                 <label>Pay at Pickup</label>
                 <select id="bikePayAtPickup">
                   <option value="true">Yes</option>
                   <option value="false">No</option>
                 </select>
+              </div>
+              <div class="form-group">
+                <label>Available At (Address)</label>
+                <input type="text" id="bikeAvailableAt" placeholder="e.g. Karwan East, Hyderabad" />
+              </div>
+              <div class="form-group full">
+                <label>Description</label>
+                <textarea id="bikeDesc" rows="3" placeholder="Brief description of the bike…"></textarea>
               </div>
             </div>
             <div style="margin-top:20px">
