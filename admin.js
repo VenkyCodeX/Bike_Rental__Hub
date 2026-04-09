@@ -215,7 +215,17 @@ $('addBikeForm').addEventListener('submit', async e => {
       engine:   $('bikeEngine').value.trim(),
       status:   $('bikeStatus').value,
       img:      imgUrl,
-      desc:     $('bikeDesc').value.trim()
+      desc:     $('bikeDesc').value.trim(),
+      transmission:     $('bikeTransmission').value,
+      seats:            $('bikeSeats').value,
+      fuelType:         $('bikeFuelType').value,
+      availableAt:      $('bikeAvailableAt').value.trim(),
+      kmLimit:          +$('bikeKmLimit').value || 0,
+      extraPerKm:       +$('bikeExtraPerKm').value || 0,
+      deposit:          +$('bikeDeposit').value || 0,
+      manufacturedYear: $('bikeYear').value.trim(),
+      fuelIncluded:     $('bikeFuelIncluded').value === 'true',
+      payAtPickup:      $('bikePayAtPickup').value === 'true'
     };
 
     const res = await apiFetch(`${API}/bikes`, { method: 'POST', body: JSON.stringify(payload) });
@@ -308,6 +318,16 @@ window.openEditModal = async function (id) {
     $('editMaintUntil').value   = bike.maintenanceUntil || '';
     $('editRentedFrom').value   = bike.rentedFrom || '';
     $('editRentedUntil').value  = bike.rentedUntil || '';
+    $('editTransmission').value = bike.transmission || 'Manual';
+    $('editSeats').value        = bike.seats || '2 Seater';
+    $('editFuelType').value     = bike.fuelType || 'Petrol';
+    $('editAvailableAt').value  = bike.availableAt || '';
+    $('editKmLimit').value      = bike.kmLimit || 0;
+    $('editExtraPerKm').value   = bike.extraPerKm || 0;
+    $('editDeposit').value      = bike.deposit || 0;
+    $('editYear').value         = bike.manufacturedYear || '';
+    $('editFuelIncluded').value = bike.fuelIncluded ? 'true' : 'false';
+    $('editPayAtPickup').value  = bike.payAtPickup !== false ? 'true' : 'false';
     toggleStatusDates(bike.status);
     $('editModalOverlay').classList.add('open');
   } catch (err) {
@@ -346,7 +366,17 @@ $('editBikeForm').addEventListener('submit', async e => {
     maintenanceFrom:  $('editMaintFrom').value,
     maintenanceUntil: $('editMaintUntil').value,
     rentedFrom:       $('editRentedFrom').value,
-    rentedUntil:      $('editRentedUntil').value
+    rentedUntil:      $('editRentedUntil').value,
+    transmission:     $('editTransmission').value,
+    seats:            $('editSeats').value,
+    fuelType:         $('editFuelType').value,
+    availableAt:      $('editAvailableAt').value.trim(),
+    kmLimit:          +$('editKmLimit').value || 0,
+    extraPerKm:       +$('editExtraPerKm').value || 0,
+    deposit:          +$('editDeposit').value || 0,
+    manufacturedYear: $('editYear').value.trim(),
+    fuelIncluded:     $('editFuelIncluded').value === 'true',
+    payAtPickup:      $('editPayAtPickup').value === 'true'
   };
 
   try {

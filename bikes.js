@@ -105,26 +105,34 @@ function renderBikes() {
 
     return `
     <div class="bike-card ${isMaint ? 'card-maintenance' : isRented ? 'card-rented' : ''}" style="animation-delay:${i * 0.06}s">
+      <div class="card-top-row">
+        <div class="card-name">${b.name}</div>
+        ${b.payAtPickup !== false ? '<div class="card-pay-badge"><i class="fas fa-circle-check"></i> Pay at Pickup Available</div>' : ''}
+      </div>
       <div class="card-img-wrap">
         <img src="${b.img}" alt="${b.name}" loading="lazy" />
-        <span class="card-badge ${badgeClass(b.badge)}">${b.badge}</span>
         ${statusOverlay}
       </div>
-      <div class="card-body">
-        <div class="card-name">${b.name}</div>
-        <div class="card-location"><i class="fas fa-location-dot"></i>${b.location}</div>
-        <div class="card-meta">
-          <div class="card-price">&#8377;${b.price}<small>/day</small></div>
-          <div class="card-rating">
-            ${starsHTML(b.rating)}
-            <span>(${b.reviews})</span>
-          </div>
-        </div>
-        <div class="card-actions">
-          <button class="btn-book-card" onclick="openModal('${b._id}','book')" ${isMaint || isRented ? 'disabled style="opacity:0.5;cursor:not-allowed"' : ''}>Book Now</button>
-          <button class="btn-pay-card"  onclick="openModal('${b._id}','pay')"  ${isMaint || isRented ? 'disabled style="opacity:0.5;cursor:not-allowed"' : ''}>Pay Now</button>
-        </div>
+      <a href="#" class="card-packages-btn" onclick="openModal('${b._id}','book');return false;">View All Packages</a>
+      <div class="card-specs">
+        <span><i class="fas fa-gears"></i> ${b.transmission || 'Manual'}</span>
+        <span><i class="fas fa-user-group"></i> ${b.seats || '2 Seater'}</span>
+        <span><i class="fas fa-gas-pump"></i> ${b.fuelType || 'Petrol'}</span>
       </div>
+      ${b.availableAt ? `<div class="card-available-at"><small>Available at</small><p>${b.availableAt}</p></div>` : ''}
+      <div class="card-pricing">
+        <div class="card-price-block">
+          <div class="card-price">&#8377;${b.price} <small>(incl. Tax)</small></div>
+          ${b.kmLimit ? `<div class="card-limit">${b.kmLimit} Km limit</div>` : ''}
+          ${b.extraPerKm ? `<div class="card-extra">Extra: &#8377;${b.extraPerKm}/Km</div>` : ''}
+          <div class="card-fuel-label">${b.fuelIncluded ? 'Fuel Included' : 'Fuel Excluded'}</div>
+        </div>
+        <button class="card-rent-btn" onclick="openModal('${b._id}','book')" ${isMaint || isRented ? 'disabled' : ''}>Rent Now</button>
+      </div>
+      ${(b.deposit || b.manufacturedYear) ? `<div class="card-footer-row">
+        ${b.deposit ? `<span>Deposit : &#8377;${b.deposit}</span>` : ''}
+        ${b.manufacturedYear ? `<span>Manufactured Year : ${b.manufacturedYear}</span>` : ''}
+      </div>` : ''}
     </div>`;
   }).join('');
 }
