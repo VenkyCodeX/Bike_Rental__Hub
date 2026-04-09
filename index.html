@@ -18,6 +18,12 @@
 </head>
 <body>
 
+<!-- ANNOUNCEMENT BAR -->
+<div class="announce-bar">
+  <span>Save Big with <strong>Monthly Bookings!</strong></span>
+  <a href="bikes.html" class="announce-btn">Explore Now</a>
+</div>
+
 <!-- NAVBAR -->
 <nav class="navbar" id="navbar">
   <a href="index.html" class="nav-logo">
@@ -41,36 +47,50 @@
 
 <!-- HERO -->
 <section class="hero" id="home">
-  <div class="hero-bg"></div>
-  <div class="hero-content">
-    <div class="hero-text">
-      <div class="hero-badge"><i class="fas fa-motorcycle"></i> Hyderabad's Trusted Bike Rental</div>
-      <h1>Bike Rental Hub –<br><span>Easy, Affordable</span> &amp; Fast</h1>
-      <p>Daily rentals at the best price. No hidden charges. Pick up or doorstep delivery available across Hyderabad.</p>
-      <a href="bikes.html" class="btn-primary">
-        <i class="fas fa-motorcycle"></i> View Bikes
-      </a>
-      <div class="hero-stats">
-        <div class="stat-item">
-          <div class="stat-num" data-target="500" data-suffix="+">0</div>
-          <div class="stat-label">Happy Riders</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num" data-target="20" data-suffix="+">0</div>
-          <div class="stat-label">Bike Models</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num" data-target="299" data-prefix="&#8377;">0</div>
-          <div class="stat-label">Starting/Day</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num" data-target="24" data-suffix="/7">0</div>
-          <div class="stat-label">Support</div>
-        </div>
-      </div>
+  <div class="hero-img-overlay">
+    <img src="assets/Royal-Enfield.webp" alt="Bike Rental" class="hero-bg-img" />
+    <div class="hero-overlay"></div>
+    <div class="hero-headline">
+      <h1>NAVIGATE<br>THE CITY<br><span>ON</span> YOUR<br>OWN TERMS!</h1>
     </div>
   </div>
 </section>
+
+<!-- BOOKING WIDGET -->
+<div class="booking-widget">
+  <div class="bw-tabs">
+    <button class="bw-tab active" id="tabDaily" onclick="switchTab('daily')">Daily</button>
+    <button class="bw-tab" id="tabMonthly" onclick="switchTab('monthly')">Monthly</button>
+  </div>
+  <div class="bw-field">
+    <input type="text" placeholder="Hyderabad" readonly />
+    <i class="fas fa-location-dot"></i>
+  </div>
+  <div class="bw-row">
+    <div class="bw-field">
+      <input type="date" id="pickupDate" />
+    </div>
+    <div class="bw-field">
+      <input type="time" id="pickupTime" value="10:00" />
+    </div>
+  </div>
+  <div class="bw-row" id="returnRow">
+    <div class="bw-field">
+      <input type="date" id="returnDate" />
+    </div>
+    <div class="bw-field">
+      <input type="time" id="returnTime" value="10:00" />
+    </div>
+  </div>
+  <a href="bikes.html" class="bw-search-btn">Search</a>
+</div>
+
+<!-- TAGLINE -->
+<div class="home-tagline">
+  <h2>Bike Rental Hub &ndash; Hyderabad's Trusted Bike &amp; Scooter Rental Service</h2>
+  <p class="our-services-label">Our Services</p>
+  <p>Your Bike, Your Way &ndash; Bike Rentals with No Complications</p>
+</div>
 
 <!-- WHY CHOOSE US -->
 <section class="why-us" id="why-us">
@@ -303,5 +323,17 @@
 </div>
 
 <script src="script.js"></script>
+<script>
+function switchTab(tab) {
+  document.getElementById('tabDaily').classList.toggle('active', tab === 'daily');
+  document.getElementById('tabMonthly').classList.toggle('active', tab === 'monthly');
+  document.getElementById('returnRow').style.display = tab === 'daily' ? 'grid' : 'none';
+}
+// Set default dates
+const today = new Date().toISOString().split('T')[0];
+const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+document.getElementById('pickupDate').value = today;
+document.getElementById('returnDate').value = tomorrow;
+</script>
 </body>
 </html>
