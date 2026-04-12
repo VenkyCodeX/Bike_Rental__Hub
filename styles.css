@@ -322,6 +322,103 @@ section { padding: 80px 5%; }
 .section-header h2 span { color: var(--orange); }
 .section-header p { color: var(--text-muted); font-size: 16px; max-width: 520px; margin: 0 auto; }
 
+/* ── FEATURED BIKES CAROUSEL ── */
+.featured-section { background: var(--dark2); padding: 80px 0; overflow: hidden; }
+.featured-section .section-header { padding: 0 5%; }
+
+.carousel-wrap {
+  position: relative;
+  height: 380px;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+
+.carousel-track {
+  position: relative;
+  width: 100%; height: 100%;
+}
+
+.carousel-card {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0.7);
+  width: 260px;
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(0.4,0,0.2,1);
+  cursor: pointer;
+  pointer-events: none;
+}
+.carousel-card img {
+  width: 100%; height: 180px;
+  object-fit: cover; display: block;
+}
+.carousel-info {
+  padding: 14px 16px;
+}
+.carousel-info h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.carousel-info p  { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+.carousel-price   { font-size: 16px; font-weight: 800; color: var(--orange); font-family: 'Rajdhani', sans-serif; }
+
+/* Active - center large */
+.carousel-card.active {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  z-index: 3;
+  pointer-events: all;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.18);
+}
+/* Next - right side */
+.carousel-card.next {
+  transform: translate(10%, -50%) scale(0.78);
+  opacity: 0.7;
+  z-index: 2;
+  pointer-events: none;
+}
+/* Prev - left side */
+.carousel-card.prev {
+  transform: translate(-110%, -50%) scale(0.78);
+  opacity: 0.7;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.carousel-btn {
+  position: absolute; top: 50%; z-index: 10;
+  transform: translateY(-50%);
+  width: 40px; height: 40px; border-radius: 50%;
+  background: #fff; border: none;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 14px; color: var(--text);
+  transition: all 0.2s;
+}
+.carousel-btn:hover { background: var(--orange); color: #fff; }
+.carousel-prev { left: 16px; }
+.carousel-next { right: 16px; }
+
+.carousel-dots {
+  display: flex; justify-content: center; gap: 8px;
+  margin-top: 20px;
+}
+.carousel-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--border); border: none; cursor: pointer;
+  transition: all 0.3s;
+}
+.carousel-dot.active { background: var(--orange); width: 24px; border-radius: 4px; }
+
+@media (max-width: 600px) {
+  .carousel-wrap { height: 320px; }
+  .carousel-card { width: 220px; }
+  .carousel-card img { height: 150px; }
+  .carousel-card.next  { transform: translate(15%, -50%) scale(0.75); }
+  .carousel-card.prev  { transform: translate(-115%, -50%) scale(0.75); }
+}
+
 /* ── WHY US ── */
 .why-us { background: var(--dark2); }
 

@@ -91,6 +91,78 @@
   <p class="home-desc">We offer a variety of Scooters and Bikes very affordable and convenient to hire. Explore the city on two wheels. Ride in style with Bike Rental Hub. Your adventure starts here!</p>
 </div>
 
+<!-- FEATURED BIKES CAROUSEL -->
+<section class="featured-section">
+  <div class="section-header reveal">
+    <div class="section-tag">Our Fleet</div>
+    <h2>Featured <span>Bikes</span></h2>
+    <p>Handpicked bikes for every rider. Swipe to explore.</p>
+  </div>
+  <div class="carousel-wrap">
+    <div class="carousel-track" id="carouselTrack">
+      <div class="carousel-card" data-href="bikes.html">
+        <img src="assets/Royal-Enfield.webp" alt="Royal Enfield Classic 350" />
+        <div class="carousel-info">
+          <h3>Royal Enfield Classic 350</h3>
+          <p>Cruiser &bull; 349cc</p>
+          <span class="carousel-price">&#8377;699/day</span>
+        </div>
+      </div>
+      <div class="carousel-card" data-href="bikes.html">
+        <img src="assets/KTM.webp" alt="KTM Duke 200" />
+        <div class="carousel-info">
+          <h3>KTM Duke 200</h3>
+          <p>Sport &bull; 199cc</p>
+          <span class="carousel-price">&#8377;799/day</span>
+        </div>
+      </div>
+      <div class="carousel-card" data-href="bikes.html">
+        <img src="assets/Activa.webp" alt="Honda Activa 6G" />
+        <div class="carousel-info">
+          <h3>Honda Activa 6G</h3>
+          <p>Scooter &bull; 109cc</p>
+          <span class="carousel-price">&#8377;299/day</span>
+        </div>
+      </div>
+      <div class="carousel-card" data-href="bikes.html">
+        <img src="assets/Pulsar.webp" alt="Bajaj Pulsar NS200" />
+        <div class="carousel-info">
+          <h3>Bajaj Pulsar NS200</h3>
+          <p>Sport &bull; 199cc</p>
+          <span class="carousel-price">&#8377;599/day</span>
+        </div>
+      </div>
+      <div class="carousel-card" data-href="bikes.html">
+        <img src="assets/Honda.webp" alt="Honda CB Shine" />
+        <div class="carousel-info">
+          <h3>Honda CB Shine</h3>
+          <p>Commuter &bull; 124cc</p>
+          <span class="carousel-price">&#8377;349/day</span>
+        </div>
+      </div>
+      <div class="carousel-card" data-href="bikes.html">
+        <img src="assets/Suzuki.webp" alt="Suzuki Gixxer" />
+        <div class="carousel-info">
+          <h3>Suzuki Gixxer</h3>
+          <p>Sport &bull; 155cc</p>
+          <span class="carousel-price">&#8377;649/day</span>
+        </div>
+      </div>
+      <div class="carousel-card" data-href="bikes.html">
+        <img src="assets/Suzuki2.webp" alt="Suzuki Access 125" />
+        <div class="carousel-info">
+          <h3>Suzuki Access 125</h3>
+          <p>Scooter &bull; 124cc</p>
+          <span class="carousel-price">&#8377;279/day</span>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-btn carousel-prev" id="carouselPrev"><i class="fas fa-chevron-left"></i></button>
+    <button class="carousel-btn carousel-next" id="carouselNext"><i class="fas fa-chevron-right"></i></button>
+  </div>
+  <div class="carousel-dots" id="carouselDots"></div>
+</section>
+
 <!-- WHY CHOOSE US -->
 <section class="why-us" id="why-us">
   <div class="section-header reveal">
@@ -388,6 +460,54 @@
 </div>
 
 <script src="script.js"></script>
+<script>
+// ── FEATURED BIKES CAROUSEL ──
+(function() {
+  const track  = document.getElementById('carouselTrack');
+  const cards  = Array.from(track.querySelectorAll('.carousel-card'));
+  const dotsWrap = document.getElementById('carouselDots');
+  let current = 0;
+  const total = cards.length;
+
+  // Build dots
+  cards.forEach((_, i) => {
+    const d = document.createElement('button');
+    d.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => goTo(i));
+    dotsWrap.appendChild(d);
+  });
+
+  function goTo(idx) {
+    current = (idx + total) % total;
+    cards.forEach((c, i) => {
+      c.classList.remove('active', 'prev', 'next');
+      const diff = (i - current + total) % total;
+      if (diff === 0) c.classList.add('active');
+      else if (diff === 1 || diff === total - 1) c.classList.add(diff === 1 ? 'next' : 'prev');
+    });
+    dotsWrap.querySelectorAll('.carousel-dot').forEach((d, i) => d.classList.toggle('active', i === current));
+  }
+
+  document.getElementById('carouselPrev').addEventListener('click', () => goTo(current - 1));
+  document.getElementById('carouselNext').addEventListener('click', () => goTo(current + 1));
+
+  // Touch swipe
+  let startX = 0;
+  track.addEventListener('touchstart', e => startX = e.touches[0].clientX, { passive: true });
+  track.addEventListener('touchend', e => {
+    const diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) goTo(diff > 0 ? current + 1 : current - 1);
+  });
+
+  // Click to go to bikes
+  cards.forEach(c => c.addEventListener('click', () => { if (c.classList.contains('active')) window.location.href = c.dataset.href; }));
+
+  // Auto-slide
+  setInterval(() => goTo(current + 1), 3000);
+
+  goTo(0);
+})();
+</script>
 <script>
 const t = new Date(), t2 = new Date(t.getTime()+86400000), t30 = new Date(t.getTime()+30*86400000);
 const fmt = d => d.toISOString().split('T')[0];
