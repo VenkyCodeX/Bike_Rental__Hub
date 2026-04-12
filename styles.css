@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alike+Angular&family=Inter:wght@300;400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap');
 
 :root {
   --orange: #ff7a00;
@@ -53,9 +53,9 @@ input, select, textarea { font-family: inherit; outline: none; }
 .nav-logo { display: flex; align-items: center; gap: 10px; }
 .nav-logo img { width: 38px; height: 38px; border-radius: 8px; object-fit: cover; }
 .logo-text {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 24px; font-weight: 700;
-  letter-spacing: 1px;
+  font-family: 'Alike Angular', serif;
+  font-size: 24px; font-weight: 400;
+  letter-spacing: 0.5px;
 }
 .logo-text span { color: var(--orange); }
 
