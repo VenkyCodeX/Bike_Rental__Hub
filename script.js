@@ -64,22 +64,3 @@ window.addEventListener('scroll', () => {
   document.getElementById('navbar').style.background =
     window.scrollY > 50 ? 'rgba(255,255,255,1)' : 'rgba(255,255,255,0.97)';
 });
-
-// ── HIDE NAVBAR + TOPBAR ON SCROLL DOWN (mobile) ──
-(function() {
-  let lastY = window.scrollY;
-  window.addEventListener('scroll', function() {
-    if (window.innerWidth > 600) return;
-    const nav = document.getElementById('navbar');
-    const topBar = document.querySelector('.top-bar');
-    const y = window.scrollY;
-    if (y > lastY && y > 120) {
-      nav.classList.add('hide-nav');
-      if (topBar) topBar.classList.add('hide-nav');
-    } else if (y < lastY) {
-      nav.classList.remove('hide-nav');
-      if (topBar) topBar.classList.remove('hide-nav');
-    }
-    lastY = y;
-  }, { passive: true });
-})();
