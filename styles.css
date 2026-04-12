@@ -323,8 +323,7 @@ section { padding: 80px 5%; }
 .section-header p { color: var(--text-muted); font-size: 16px; max-width: 520px; margin: 0 auto; }
 
 /* ── FEATURED BIKES CAROUSEL ── */
-.featured-section { background: var(--dark2); padding: 80px 0; overflow: hidden; }
-.featured-section .section-header { padding: 0 5%; }
+.featured-section { background: var(--dark2); padding: 40px 0 50px; overflow: hidden; }
 
 .carousel-wrap {
   position: relative;
