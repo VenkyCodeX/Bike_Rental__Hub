@@ -380,5 +380,19 @@
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="bikes.js"></script>
+<script>
+// Hide navbar on scroll down, show on scroll up (mobile)
+(function() {
+  let lastY = 0;
+  window.addEventListener('scroll', function() {
+    if (window.innerWidth > 600) return;
+    const nav = document.getElementById('navbar');
+    const y = window.scrollY;
+    if (y > lastY && y > 80) nav.classList.add('hide-nav');
+    else nav.classList.remove('hide-nav');
+    lastY = y;
+  }, { passive: true });
+})();
+</script>
 </body>
 </html>

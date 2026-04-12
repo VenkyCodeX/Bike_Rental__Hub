@@ -510,6 +510,13 @@
 
 /* ── RESPONSIVE ── */
 @media (max-width: 600px) {
+  .navbar {
+    position: fixed;
+    transition: transform 0.3s ease;
+  }
+  .navbar.hide-nav {
+    transform: translateY(-100%);
+  }
   .filter-bar {
     position: relative;
     top: auto;
