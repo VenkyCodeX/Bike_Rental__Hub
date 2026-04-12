@@ -510,6 +510,10 @@
 
 /* ── RESPONSIVE ── */
 @media (max-width: 600px) {
+  .filter-bar {
+    position: relative;
+    top: auto;
+  }
   .filter-inner { flex-direction: column; align-items: stretch; }
   .filter-right { flex-direction: column; }
   .search-wrap input { width: 100%; }
