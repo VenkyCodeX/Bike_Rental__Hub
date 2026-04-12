@@ -272,7 +272,8 @@ input, select, textarea { font-family: inherit; outline: none; }
   .book-row { grid-template-columns: 1fr 1fr; }
   .book-field input { font-size: 13px; }
   .navbar, .top-bar { transition: transform 0.3s ease; }
-  .navbar.hide-nav, .top-bar.hide-nav { transform: translateY(-100%); }
+  .top-bar.hide-nav { transform: translateY(-100%); }
+  .navbar.hide-nav { transform: translateY(calc(-100% - 38px)); }
 }
 
 /* ── SECTIONS ── */
