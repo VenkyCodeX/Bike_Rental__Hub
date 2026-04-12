@@ -131,6 +131,23 @@
           </div>
         </div>
 
+        <!-- DELIVERY OPTION -->
+        <div class="delivery-toggle">
+          <div class="delivery-label"><i class="fas fa-motorcycle"></i> Delivery Option</div>
+          <div class="delivery-opts">
+            <button type="button" class="delivery-opt active" id="optPickup" onclick="setDelivery('pickup')">
+              <i class="fas fa-store"></i>
+              <span>Pick up at Store</span>
+              <small>Free</small>
+            </button>
+            <button type="button" class="delivery-opt" id="optDoorstep" onclick="setDelivery('doorstep')">
+              <i class="fas fa-truck"></i>
+              <span>Doorstep Delivery</span>
+              <small>+&#8377;49</small>
+            </button>
+          </div>
+        </div>
+
         <div class="booking-summary" id="bookingSummary">
           <div class="coupon-row">
             <input type="text" id="couponCode" placeholder="Enter Coupon Code" />
@@ -138,6 +155,7 @@
           </div>
           <div class="summary-row"><span>Rental Charges</span><span id="sumTotal">&#8377;–</span></div>
           <div class="summary-row"><span>Platform Charges</span><span>&#8377;19</span></div>
+          <div class="summary-row" id="sumDeliveryRow" style="display:none"><span>Doorstep Delivery</span><span>&#8377;49</span></div>
           <div class="summary-row insurance-row">
             <label><input type="checkbox" id="insuranceCheck" checked /> Ride <a href="terms.html" target="_blank" class="ins-link">Insurance</a> (Basic Cover)</label>
             <span>&#8377;39</span>

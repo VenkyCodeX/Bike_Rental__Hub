@@ -24,6 +24,7 @@ let searchQuery   = '';
 let currentBike   = null;
 let selectedRating = 0;
 let openTab       = 'book';
+let deliveryMode  = 'pickup';
 
 // ── HELPERS ──
 function starsHTML(rating) {
@@ -187,7 +188,16 @@ function closeModal() {
 document.getElementById('modalClose').addEventListener('click', closeModal);
 overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
 
+window.setDelivery = function(mode) {
+  deliveryMode = mode;
+  document.getElementById('optPickup').classList.toggle('active', mode === 'pickup');
+  document.getElementById('optDoorstep').classList.toggle('active', mode === 'doorstep');
+  document.getElementById('sumDeliveryRow').style.display = mode === 'doorstep' ? 'flex' : 'none';
+  calcSummary();
+};
+
 function resetModal() {
+  deliveryMode = 'pickup';
   ['custName', 'custPhone', 'startDate', 'endDate', 'upiId', 'cardNum', 'cardExpiry', 'cardCvv', 'cardName', 'couponCode'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = '';
@@ -202,6 +212,9 @@ function resetModal() {
   if (ic) ic.checked = true;
   document.getElementById('sumTotal').textContent     = '₹–';
   document.getElementById('sumGrandTotal').textContent = '₹–';
+  document.getElementById('sumDeliveryRow').style.display = 'none';
+  document.getElementById('optPickup').classList.add('active');
+  document.getElementById('optDoorstep').classList.remove('active');
   selectedRating = 0;
   updateStarPicker(0);
   document.getElementById('reviewName').value = '';
@@ -254,7 +267,8 @@ function calcSummary() {
   const days     = Math.max(1, Math.round((new Date(e) - new Date(s)) / 86400000));
   const rental   = days * currentBike.price;
   const insurance = document.getElementById('insuranceCheck').checked ? 39 : 0;
-  const grand    = rental + 19 + insurance;
+  const delivery  = deliveryMode === 'doorstep' ? 49 : 0;
+  const grand    = rental + 19 + insurance + delivery;
   document.getElementById('sumTotal').textContent      = `₹${rental}`;
   document.getElementById('sumGrandTotal').textContent = `₹${grand}`;
   return { days, rental, grand };
@@ -296,7 +310,8 @@ document.getElementById('proceedPayBtn').addEventListener('click', () => {
     const days = s && e ? Math.max(1, Math.round((new Date(e) - new Date(s)) / 86400000)) : 1;
     const rental = days * (currentBike ? currentBike.price : 0);
     const insurance = document.getElementById('insuranceCheck').checked ? 39 : 0;
-    const grand = rental + 19 + insurance;
+    const delivery  = deliveryMode === 'doorstep' ? 49 : 0;
+    const grand = rental + 19 + insurance + delivery;
     const pickup = document.getElementById('pickupTime').value || '10:00';
     document.getElementById('cashBikeSummary').innerHTML = `
       <div class="cash-bike-card">
@@ -311,9 +326,11 @@ document.getElementById('proceedPayBtn').addEventListener('click', () => {
         <div class="cash-row"><span>Duration</span><span>${days} day${days>1?'s':''}</span></div>
         <div class="cash-row"><span>Pickup Date</span><span>${s}</span></div>
         <div class="cash-row"><span>Pickup Time</span><span>${pickup}</span></div>
+        <div class="cash-row"><span>Delivery</span><span>${deliveryMode === 'doorstep' ? 'Doorstep (+&#8377;49)' : 'Pick up at Store'}</span></div>
         <div class="cash-row"><span>Rental Charges</span><span>&#8377;${rental}</span></div>
         <div class="cash-row"><span>Platform Charges</span><span>&#8377;19</span></div>
         ${insurance ? `<div class="cash-row"><span>Insurance</span><span>&#8377;${insurance}</span></div>` : ''}
+        ${delivery  ? `<div class="cash-row"><span>Doorstep Delivery</span><span>&#8377;${delivery}</span></div>` : ''}
         <div class="cash-row total"><span>Total (Pay at Pickup)</span><span>&#8377;${grand}</span></div>
       </div>`;
     showStep(1, 'cash');
@@ -332,8 +349,9 @@ document.getElementById('confirmCashBtn').addEventListener('click', () => {
   const days  = (from !== 'TBD' && to !== 'TBD') ? Math.max(1, Math.round((new Date(to) - new Date(from)) / 86400000)) : 1;
   const rental = days * (currentBike ? currentBike.price : 0);
   const insurance = document.getElementById('insuranceCheck').checked ? 39 : 0;
-  const grand = rental + 19 + insurance;
-  const msg = encodeURIComponent(`Hi, I want to book *${currentBike.name}* (Cash on Pickup)\nFrom: ${from} To: ${to} (${days} day${days>1?'s':''})\nPickup Time: ${time}\nTotal: \u20b9${grand}\nName: ${name}\nPhone: ${phone}\nPlease confirm my booking. - Bike Rental Hub`);
+  const delivery  = deliveryMode === 'doorstep' ? 49 : 0;
+  const grand = rental + 19 + insurance + delivery;
+  const msg = encodeURIComponent(`Hi, I want to book *${currentBike.name}* (Cash on Pickup)\nFrom: ${from} To: ${to} (${days} day${days>1?'s':''})\nPickup Time: ${time}\nDelivery: ${deliveryMode === 'doorstep' ? 'Doorstep (+₹49)' : 'Pick up at Store'}\nTotal: \u20b9${grand}\nName: ${name}\nPhone: ${phone}\nPlease confirm my booking. - Bike Rental Hub`);
   window.open(`https://wa.me/919391265697?text=${msg}`, '_blank');
 });
 
@@ -346,7 +364,8 @@ function updatePayAmount() {
     rental = days * currentBike.price;
   }
   const insurance = document.getElementById('insuranceCheck').checked ? 39 : 0;
-  const grand = rental + 19 + insurance;
+  const delivery  = deliveryMode === 'doorstep' ? 49 : 0;
+  const grand = rental + 19 + insurance + delivery;
   document.getElementById('payAmountDisplay').textContent = `₹${grand}`;
   return grand;
 }
@@ -397,7 +416,8 @@ async function saveBooking() {
   const days  = s && e ? Math.max(1, Math.round((new Date(e) - new Date(s)) / 86400000)) : 1;
   const rental = days * (currentBike ? currentBike.price : 0);
   const insurance = document.getElementById('insuranceCheck').checked ? 39 : 0;
-  const total = rental + 19 + insurance;
+  const delivery  = deliveryMode === 'doorstep' ? 49 : 0;
+  const total = rental + 19 + insurance + delivery;
   const pickupTime = document.getElementById('pickupTime')?.value || '10:00';
   const dropTime   = document.getElementById('dropTime')?.value   || '10:00';
 
@@ -417,7 +437,8 @@ async function saveBooking() {
       pickupTime,
       dropTime,
       amount:     total,
-      payMethod
+      payMethod,
+      delivery:   deliveryMode
     })
   });
 
