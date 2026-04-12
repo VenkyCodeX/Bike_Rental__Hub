@@ -52,6 +52,19 @@ input, select, textarea { font-family: inherit; outline: none; }
 
 .nav-logo { display: flex; align-items: center; gap: 10px; }
 .nav-logo img { width: 120px; height: 60px; border-radius: 8px; object-fit: contain; background: transparent; }
+
+.nav-right {
+  display: flex; align-items: center; gap: 16px; margin-left: auto;
+}
+
+.nav-phone {
+  font-size: 15px; font-weight: 700;
+  color: var(--text); white-space: nowrap;
+  display: flex; align-items: center; gap: 6px;
+  transition: color var(--transition);
+}
+.nav-phone i { color: var(--orange); font-size: 13px; }
+.nav-phone:hover { color: var(--orange); }
 .logo-text {
   font-family: 'Alike Angular', serif;
   font-size: 26px; font-weight: 400;
@@ -120,8 +133,8 @@ input, select, textarea { font-family: inherit; outline: none; }
   display: flex; align-items: center; justify-content: space-between;
   padding: 9px 5%;
   font-size: 13px;
-  position: fixed; top: 0; left: 0; right: 0;
-  z-index: 1001;
+  position: fixed; top: 70px; left: 0; right: 0;
+  z-index: 999;
 }
 .top-bar strong { color: var(--orange); }
 .top-bar-btn {
@@ -133,7 +146,7 @@ input, select, textarea { font-family: inherit; outline: none; }
 .top-bar-btn:hover { opacity: 0.88; }
 
 /* push navbar below top bar */
-.navbar { top: 38px; }
+.navbar { top: 0; }
 
 /* ── HERO ── */
 .hero-wrap {
