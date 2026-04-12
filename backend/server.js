@@ -31,6 +31,7 @@ app.use('/api/bikes',    require('./routes/bikes'));
 app.use('/api/bookings', require('./routes/bookings'));
 app.use('/api/reviews',  require('./routes/reviews'));
 app.use('/api/upload',   require('./routes/upload'));
+app.use('/api/payment',  require('./routes/payment'));
 
 // Health check
 app.get('/api/health', (req, res) => res.json({ status: 'ok', service: 'Bike Rental Hub API' }));

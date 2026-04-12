@@ -392,25 +392,80 @@ document.getElementById('cardExpiry').addEventListener('input', e => {
   e.target.value = v;
 });
 
-// ── PAY NOW → SAVE BOOKING TO API ──
+// ── PAY NOW → RAZORPAY CHECKOUT ──
 document.getElementById('payNowBtn').addEventListener('click', async () => {
   const btn = document.getElementById('payNowBtn');
   btn.disabled = true;
   btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing…';
 
   try {
-    await saveBooking();
-    showStep(3);
+    const amount = updatePayAmount();
+
+    // 1. Create Razorpay order on backend
+    const orderRes = await fetch(`${API}/payment/order`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ amount })
+    });
+    if (!orderRes.ok) throw new Error('Could not create payment order');
+    const { orderId, amount: paise, currency } = await orderRes.json();
+
+    // 2. Open Razorpay checkout popup
+    const options = {
+      key:         'rzp_test_ScacZZN7qeUIOq',
+      amount:      paise,
+      currency,
+      name:        'Bike Rental Hub',
+      description: currentBike ? `Booking: ${currentBike.name}` : 'Bike Rental',
+      order_id:    orderId,
+      prefill: {
+        name:    document.getElementById('custName').value.trim(),
+        contact: document.getElementById('custPhone').value.trim()
+      },
+      theme: { color: '#ff7a00' },
+      handler: async function (response) {
+        // 3. Verify signature on backend
+        const verifyRes = await fetch(`${API}/payment/verify`, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({
+            razorpay_order_id:   response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature:  response.razorpay_signature
+          })
+        });
+        const verify = await verifyRes.json();
+        if (!verify.success) { alert('Payment verification failed. Contact support.'); return; }
+
+        // 4. Save booking to DB
+        await saveBooking(response.razorpay_payment_id);
+        showStep(3);
+      },
+      modal: {
+        ondismiss: function () {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fas fa-lock"></i> Pay Now';
+        }
+      }
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.on('payment.failed', function (resp) {
+      alert('Payment failed: ' + resp.error.description);
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-lock"></i> Pay Now';
+    });
+    rzp.open();
+
   } catch (err) {
-    alert('Booking failed. Please try again.');
+    alert('Something went wrong. Please try again.');
     console.error(err);
-  } finally {
     btn.disabled = false;
     btn.innerHTML = '<i class="fas fa-lock"></i> Pay Now';
   }
 });
 
-async function saveBooking() {
+async function saveBooking(paymentId = '') {
   const s     = document.getElementById('startDate').value;
   const e     = document.getElementById('endDate').value;
   const days  = s && e ? Math.max(1, Math.round((new Date(e) - new Date(s)) / 86400000)) : 1;
@@ -438,7 +493,8 @@ async function saveBooking() {
       dropTime,
       amount:     total,
       payMethod,
-      delivery:   deliveryMode
+      delivery:   deliveryMode,
+      paymentId
     })
   });
 

@@ -11,6 +11,8 @@ const BookingSchema = new mongoose.Schema({
   amount:     { type: Number, required: true },
   status:     { type: String, enum: ['confirmed', 'pending', 'cancelled', 'running', 'returned'], default: 'confirmed' },
   payMethod:  { type: String, default: 'upi' },
+  paymentId:  { type: String, default: '' },
+  delivery:   { type: String, enum: ['pickup', 'doorstep'], default: 'pickup' },
   pickupTime: { type: String, default: '10:00' },
   dropTime:   { type: String, default: '10:00' }
 }, { timestamps: true });
