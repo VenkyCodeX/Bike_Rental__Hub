@@ -87,6 +87,19 @@ input, select, textarea { font-family: inherit; outline: none; }
 }
 .btn-book:hover { opacity: 0.88; transform: translateY(-1px); }
 
+.nav-right {
+  display: flex; align-items: center; gap: 12px; margin-left: auto;
+}
+
+.nav-phone {
+  font-size: 14px; font-weight: 700;
+  color: var(--text); white-space: nowrap;
+  display: flex; align-items: center; gap: 6px;
+  transition: color var(--transition);
+}
+.nav-phone i { color: var(--orange); font-size: 13px; }
+.nav-phone:hover { color: var(--orange); }
+
 .hamburger {
   display: none; flex-direction: column;
   gap: 5px; background: none; padding: 4px;
@@ -474,6 +487,7 @@ footer {
 @media (max-width: 768px) {
   .nav-links, .btn-book { display: none; }
   .hamburger { display: flex; }
+  .nav-phone { display: flex; font-size: 13px; }
 
   .nav-links.open {
     display: flex; flex-direction: column;
