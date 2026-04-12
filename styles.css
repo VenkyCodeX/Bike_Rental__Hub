@@ -51,13 +51,14 @@ input, select, textarea { font-family: inherit; outline: none; }
 }
 
 .nav-logo { display: flex; align-items: center; gap: 10px; }
-.nav-logo img { width: 38px; height: 38px; border-radius: 8px; object-fit: cover; }
+.nav-logo img { width: 44px; height: 44px; border-radius: 8px; object-fit: contain; background: transparent; }
 .logo-text {
   font-family: 'Alike Angular', serif;
-  font-size: 24px; font-weight: 400;
+  font-size: 26px; font-weight: 400;
   letter-spacing: 0.5px;
+  -webkit-text-stroke: 1.2px currentColor;
 }
-.logo-text span { color: var(--orange); }
+.logo-text span { color: var(--orange); -webkit-text-stroke: 1.2px var(--orange); }
 
 .nav-links {
   display: flex; align-items: center; gap: 32px;
@@ -270,6 +271,8 @@ input, select, textarea { font-family: inherit; outline: none; }
   .book-card { margin: -22px 3% 0; padding: 14px; width: 94%; }
   .book-row { grid-template-columns: 1fr 1fr; }
   .book-field input { font-size: 13px; }
+  .navbar, .top-bar { transition: transform 0.3s ease; }
+  .navbar.hide-nav, .top-bar.hide-nav { transform: translateY(-100%); }
 }
 
 /* ── SECTIONS ── */

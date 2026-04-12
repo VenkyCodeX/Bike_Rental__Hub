@@ -64,3 +64,22 @@ window.addEventListener('scroll', () => {
   document.getElementById('navbar').style.background =
     window.scrollY > 50 ? 'rgba(255,255,255,1)' : 'rgba(255,255,255,0.97)';
 });
+
+// ── HIDE NAVBAR + TOPBAR ON SCROLL DOWN (mobile) ──
+(function() {
+  let lastY = 0;
+  window.addEventListener('scroll', function() {
+    if (window.innerWidth > 600) return;
+    const nav = document.getElementById('navbar');
+    const topBar = document.querySelector('.top-bar');
+    const y = window.scrollY;
+    if (y > lastY && y > 80) {
+      nav.classList.add('hide-nav');
+      if (topBar) topBar.classList.add('hide-nav');
+    } else {
+      nav.classList.remove('hide-nav');
+      if (topBar) topBar.classList.remove('hide-nav');
+    }
+    lastY = y;
+  }, { passive: true });
+})();
