@@ -222,18 +222,6 @@ function showReturnPopup(bookingId, bikeName) {
   $('returnNoBtn').onclick = () => $('returnPopupOverlay').classList.remove('open');
 }
 
-// Auto popup at drop time
-function scheduleReturnPopups(bookings) {
-  const running = bookings.filter(b => b.status === 'running' && b.dropTime && b.to);
-  running.forEach(b => {
-    const dropDateTime = new Date(`${b.to}T${b.dropTime}:00`);
-    const now = new Date();
-    const diff = dropDateTime - now;
-    if (diff > 0 && diff < 86400000) { // within 24h
-      setTimeout(() => showReturnPopup(b._id, b.bike), diff);
-    }
-  });
-}
 
 // ── ADD BIKE ──
 $('bikeImgUrl').addEventListener('input', e => {

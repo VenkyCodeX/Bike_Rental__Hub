@@ -8,6 +8,11 @@ const razorpay = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET
 });
 
+// GET /api/payment/key  — expose public key_id to frontend
+router.get('/key', (req, res) => {
+  res.json({ key_id: process.env.RAZORPAY_KEY_ID });
+});
+
 // POST /api/payment/order  — create Razorpay order
 router.post('/order', async (req, res) => {
   try {

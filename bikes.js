@@ -401,7 +401,11 @@ document.getElementById('payNowBtn').addEventListener('click', async () => {
   try {
     const amount = updatePayAmount();
 
-    // 1. Create Razorpay order on backend
+    // 1. Fetch key_id from backend
+    const keyRes = await fetch(`${API}/payment/key`);
+    const { key_id } = await keyRes.json();
+
+    // 2. Create Razorpay order on backend
     const orderRes = await fetch(`${API}/payment/order`, {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -410,13 +414,14 @@ document.getElementById('payNowBtn').addEventListener('click', async () => {
     if (!orderRes.ok) throw new Error('Could not create payment order');
     const { orderId, amount: paise, currency } = await orderRes.json();
 
-    // 2. Open Razorpay checkout popup
+    // 3. Open Razorpay checkout popup
     const options = {
-      key:         'rzp_test_ScacZZN7qeUIOq',
+      key:         key_id,
       amount:      paise,
       currency,
       name:        'Bike Rental Hub',
       description: currentBike ? `Booking: ${currentBike.name}` : 'Bike Rental',
+      image:       '/assets/logo.webp',
       order_id:    orderId,
       prefill: {
         name:    document.getElementById('custName').value.trim(),
@@ -424,7 +429,7 @@ document.getElementById('payNowBtn').addEventListener('click', async () => {
       },
       theme: { color: '#ff7a00' },
       handler: async function (response) {
-        // 3. Verify signature on backend
+        // 4. Verify signature on backend
         const verifyRes = await fetch(`${API}/payment/verify`, {
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -437,7 +442,7 @@ document.getElementById('payNowBtn').addEventListener('click', async () => {
         const verify = await verifyRes.json();
         if (!verify.success) { alert('Payment verification failed. Contact support.'); return; }
 
-        // 4. Save booking to DB
+        // 5. Save booking to DB
         await saveBooking(response.razorpay_payment_id);
         showStep(3);
       },
