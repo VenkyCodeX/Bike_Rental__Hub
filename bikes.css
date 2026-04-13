@@ -101,13 +101,13 @@
 .card-status-overlay small { font-size: 11px; opacity: 0.9; }
 
 .overlay-maintenance {
-  background: rgba(239,68,68,0.18);
+  background: rgba(239,68,68,0.08);
   color: #b91c1c;
 }
 .overlay-maintenance i { color: #dc2626; }
 
 .overlay-rented {
-  background: rgba(150,150,150,0.22);
+  background: rgba(150,150,150,0.08);
   color: #444;
 }
 .overlay-rented i { color: #666; }
