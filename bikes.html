@@ -91,9 +91,6 @@
       <button class="modal-tab active" data-tab="book">
         <i class="fas fa-calendar-check"></i> Book
       </button>
-      <button class="modal-tab" data-tab="reviews">
-        <i class="fas fa-star"></i> Reviews
-      </button>
     </div>
 
     <!-- BOOK TAB -->
@@ -157,19 +154,20 @@
             <button onclick="applyCoupon()">Apply</button>
           </div>
           <div class="summary-row"><span>Rental Charges</span><span id="sumTotal">&#8377;–</span></div>
-          <div class="summary-row" id="sumDeliveryRow" style="display:none"><span>Doorstep Delivery</span><span>&#8377;199</span></div>
           <div class="summary-row total"><span>Total Rent</span><span id="sumGrandTotal">&#8377;–</span></div>
         </div>
 
         <div class="delivery-note">
           <i class="fas fa-circle-info"></i>
-          Delivery charges &#8377;199 payable separately to delivery person at the time of delivery.
+          Door step delivery starts at Rs199/- (upto 5 kms)<br>
+          (Delivery charges to be paid separately at the time of delivery)
         </div>
 
         <div class="know-before">
           <div class="kb-title"><i class="fas fa-circle-info"></i> Know before you book</div>
           <div class="kb-row"><span>Extra Km Charges</span><span>&#8377;3.50/Km</span></div>
           <div class="kb-note">Late Return: &#8377;100 + double the hourly rental rate will be charged for late returns.</div>
+          <div class="kb-note">All rental bikes must be used in Hyderabad City limits only. Travelling beyond the city limits is strictly prohibited and will leads to the penalty of Rs.1000.</div>
         </div>
 
 
@@ -294,35 +292,7 @@
 
     </div><!-- /tab-book -->
 
-    <!-- REVIEWS TAB -->
-    <div class="tab-content hidden" id="tab-reviews">
-      <div class="reviews-list" id="reviewsList"></div>
 
-      <div class="review-form">
-        <h4>Write a Review</h4>
-        <div class="form-group">
-          <label>Your Name</label>
-          <input type="text" id="reviewName" placeholder="Enter your name" />
-        </div>
-        <div class="star-picker" id="starPicker">
-          <span>Rating:</span>
-          <div class="stars-input">
-            <i class="fas fa-star" data-val="1"></i>
-            <i class="fas fa-star" data-val="2"></i>
-            <i class="fas fa-star" data-val="3"></i>
-            <i class="fas fa-star" data-val="4"></i>
-            <i class="fas fa-star" data-val="5"></i>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Review</label>
-          <textarea id="reviewText" rows="3" placeholder="Share your experience…"></textarea>
-        </div>
-        <button class="btn-primary" id="submitReviewBtn" style="width:100%;justify-content:center;">
-          <i class="fas fa-paper-plane"></i> Submit Review
-        </button>
-      </div>
-    </div>
 
   </div><!-- /modal -->
 </div><!-- /overlay -->
@@ -364,7 +334,7 @@
     </div>
   </div>
   <div class="footer-bottom">
-    <p>© 2025 <span>Bike Rental Hub</span>. All rights reserved.</p>
+    <p>© 2024 <span>Bike Rental Hub</span>. All rights reserved.</p>
     <p>Developed by <span>Venky</span></p>
   </div>
 </footer>

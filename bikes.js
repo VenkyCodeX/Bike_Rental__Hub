@@ -22,7 +22,6 @@ let activeCat     = 'all';
 let activeSort    = '';
 let searchQuery   = '';
 let currentBike   = null;
-let selectedRating = 0;
 let openTab       = 'book';
 let deliveryMode  = 'pickup';
 
@@ -168,7 +167,6 @@ window.openModal = function (bikeId, mode) {
 
   resetModal();
   populateBikeHeader();
-  renderReviews();
 
   switchTab('book');
   showStep(1);
@@ -192,7 +190,7 @@ window.setDelivery = function(mode) {
   deliveryMode = mode;
   document.getElementById('optPickup').classList.toggle('active', mode === 'pickup');
   document.getElementById('optDoorstep').classList.toggle('active', mode === 'doorstep');
-  document.getElementById('sumDeliveryRow').style.display = mode === 'doorstep' ? 'flex' : 'none';
+  
   calcSummary();
 };
 
@@ -208,15 +206,11 @@ function resetModal() {
   if (dt) dt.value = '10:00';
   const tc = document.getElementById('termsCheck');
   if (tc) tc.checked = false;
-    document.getElementById('sumTotal').textContent     = '₹–';
+  document.getElementById('sumTotal').textContent     = '₹–';
   document.getElementById('sumGrandTotal').textContent = '₹–';
-  document.getElementById('sumDeliveryRow').style.display = 'none';
+  
   document.getElementById('optPickup').classList.add('active');
   document.getElementById('optDoorstep').classList.remove('active');
-  selectedRating = 0;
-  updateStarPicker(0);
-  document.getElementById('reviewName').value = '';
-  document.getElementById('reviewText').value = '';
 }
 
 function populateBikeHeader() {
@@ -262,13 +256,45 @@ function calcSummary() {
   const s = document.getElementById('startDate').value;
   const e = document.getElementById('endDate').value;
   if (!s || !e || !currentBike) return;
-  const days     = Math.max(1, Math.round((new Date(e) - new Date(s)) / 86400000));
-  const rental   = days * currentBike.price;
-    const delivery  = deliveryMode === 'doorstep' ? 49 : 0;
-  const grand    = rental  + delivery;
-  document.getElementById('sumTotal').textContent      = `₹${rental}`;
-  document.getElementById('sumGrandTotal').textContent = `₹${grand}`;
-  return { days, rental, grand };
+  
+  const startDate = new Date(s);
+  const endDate = new Date(e);
+  const diffTime = endDate - startDate;
+  const diffHours = diffTime / (1000 * 60 * 60);
+  
+  let days, discount = 0;
+  
+  // Calculate billing based on hours
+  if (diffHours <= 24) {
+    days = 1; // 1 Day
+  } else if (diffHours <= 36) {
+    days = 1.5; // 1.5 Day
+  } else if (diffHours <= 48) {
+    days = 2; // 2 Days
+  } else {
+    days = Math.ceil(diffHours / 24); // Full days for longer periods
+  }
+  
+  // Apply discounts for longer rentals
+  if (days >= 30) {
+    discount = 0.45; // 45% discount for 30+ days
+  } else if (days >= 15) {
+    discount = 0.35; // 35% discount for 15+ days
+  } else if (days >= 7) {
+    discount = 0.15; // 15% discount for 7+ days
+  }
+  
+  const baseRental = days * currentBike.price;
+  const discountAmount = baseRental * discount;
+  const rental = baseRental - discountAmount;
+  
+  // Don't include delivery in billing calculation
+  const grand = rental;
+  
+  document.getElementById('sumTotal').textContent = `₹${Math.round(rental)}`;
+  document.getElementById('sumGrandTotal').textContent = `₹${Math.round(grand)}`;
+  
+  return { days, rental: Math.round(rental), grand: Math.round(grand), discount };
 }
 
 window.applyCoupon = function() {
@@ -302,10 +328,39 @@ document.getElementById('proceedPayBtn').addEventListener('click', () => {
   if (pref === 'cash') {
     const s = document.getElementById('startDate').value;
     const e = document.getElementById('endDate').value;
-    const days = s && e ? Math.max(1, Math.round((new Date(e) - new Date(s)) / 86400000)) : 1;
-    const rental = days * (currentBike ? currentBike.price : 0);
-        const delivery  = deliveryMode === 'doorstep' ? 49 : 0;
-    const grand = rental  + delivery;
+    
+    const startDate = new Date(s);
+    const endDate = new Date(e);
+    const diffTime = endDate - startDate;
+    const diffHours = diffTime / (1000 * 60 * 60);
+    
+    let days, discount = 0;
+    
+    // Calculate billing based on hours
+    if (diffHours <= 24) {
+      days = 1;
+    } else if (diffHours <= 36) {
+      days = 1.5;
+    } else if (diffHours <= 48) {
+      days = 2;
+    } else {
+      days = Math.ceil(diffHours / 24);
+    }
+    
+    // Apply discounts
+    if (days >= 30) {
+      discount = 0.45;
+    } else if (days >= 15) {
+      discount = 0.35;
+    } else if (days >= 7) {
+      discount = 0.15;
+    }
+    
+    const baseRental = days * (currentBike ? currentBike.price : 0);
+    const discountAmount = baseRental * discount;
+    const rental = baseRental - discountAmount;
+    const grand = Math.round(rental);
+    
     const pickup = document.getElementById('pickupTime').value || '10:00';
     document.getElementById('cashBikeSummary').innerHTML = `
       <div class="cash-bike-card">
@@ -320,11 +375,9 @@ document.getElementById('proceedPayBtn').addEventListener('click', () => {
         <div class="cash-row"><span>Duration</span><span>${days} day${days>1?'s':''}</span></div>
         <div class="cash-row"><span>Pickup Date</span><span>${s}</span></div>
         <div class="cash-row"><span>Pickup Time</span><span>${pickup}</span></div>
-        <div class="cash-row"><span>Delivery</span><span>${deliveryMode === 'doorstep' ? 'Doorstep (+&#8377;49)' : 'Pick up at Store'}</span></div>
-        <div class="cash-row"><span>Rental Charges</span><span>&#8377;${rental}</span></div>
-        <div class="cash-row"><span>Platform Charges</span><span>&#8377;19</span></div>
-        ${insurance ? `<div class="cash-row"><span>Insurance</span><span>&#8377;${insurance}</span></div>` : ''}
-        ${delivery  ? `<div class="cash-row"><span>Doorstep Delivery</span><span>&#8377;${delivery}</span></div>` : ''}
+        <div class="cash-row"><span>Delivery</span><span>${deliveryMode === 'doorstep' ? 'Doorstep' : 'Pick up at Store'}</span></div>
+        <div class="cash-row"><span>Base Rental</span><span>&#8377;${Math.round(baseRental)}</span></div>
+        ${discount > 0 ? `<div class="cash-row"><span>Discount (${Math.round(discount*100)}%)</span><span>-&#8377;${Math.round(discountAmount)}</span></div>` : ''}
         <div class="cash-row total"><span>Total (Pay at Pickup)</span><span>&#8377;${grand}</span></div>
       </div>`;
     showStep(1, 'cash');
@@ -340,11 +393,38 @@ document.getElementById('confirmCashBtn').addEventListener('click', () => {
   const from  = document.getElementById('startDate').value || 'TBD';
   const to    = document.getElementById('endDate').value   || 'TBD';
   const time  = document.getElementById('pickupTime').value || '10:00';
-  const days  = (from !== 'TBD' && to !== 'TBD') ? Math.max(1, Math.round((new Date(to) - new Date(from)) / 86400000)) : 1;
-  const rental = days * (currentBike ? currentBike.price : 0);
-    const delivery  = deliveryMode === 'doorstep' ? 49 : 0;
-  const grand = rental  + delivery;
-  const msg = encodeURIComponent(`Hi, I want to book *${currentBike.name}* (Cash on Pickup)\nFrom: ${from} To: ${to} (${days} day${days>1?'s':''})\nPickup Time: ${time}\nDelivery: ${deliveryMode === 'doorstep' ? 'Doorstep (+₹49)' : 'Pick up at Store'}\nTotal: \u20b9${grand}\nName: ${name}\nPhone: ${phone}\nPlease confirm my booking. - Bike Rental Hub`);
+  
+  const startDate = new Date(from);
+  const endDate = new Date(to);
+  const diffTime = endDate - startDate;
+  const diffHours = diffTime / (1000 * 60 * 60);
+  
+  let days, discount = 0;
+  
+  if (diffHours <= 24) {
+    days = 1;
+  } else if (diffHours <= 36) {
+    days = 1.5;
+  } else if (diffHours <= 48) {
+    days = 2;
+  } else {
+    days = Math.ceil(diffHours / 24);
+  }
+  
+  if (days >= 30) {
+    discount = 0.45;
+  } else if (days >= 15) {
+    discount = 0.35;
+  } else if (days >= 7) {
+    discount = 0.15;
+  }
+  
+  const baseRental = days * (currentBike ? currentBike.price : 0);
+  const discountAmount = baseRental * discount;
+  const rental = baseRental - discountAmount;
+  const grand = Math.round(rental);
+  
+  const msg = encodeURIComponent(`Hi, I want to book *${currentBike.name}* (Cash on Pickup)\nFrom: ${from} To: ${to} (${days} day${days>1?'s':''})\nPickup Time: ${time}\nDelivery: ${deliveryMode === 'doorstep' ? 'Doorstep' : 'Pick up at Store'}\nTotal: \u20b9${grand}\nName: ${name}\nPhone: ${phone}\nPlease confirm my booking. - Bike Rental Hub`);
   window.open(`https://wa.me/919391265697?text=${msg}`, '_blank');
 });
 
@@ -353,11 +433,37 @@ function updatePayAmount() {
   const e = document.getElementById('endDate').value;
   let rental = currentBike ? currentBike.price : 0;
   if (s && e && currentBike) {
-    const days = Math.max(1, Math.round((new Date(e) - new Date(s)) / 86400000));
-    rental = days * currentBike.price;
+    const startDate = new Date(s);
+    const endDate = new Date(e);
+    const diffTime = endDate - startDate;
+    const diffHours = diffTime / (1000 * 60 * 60);
+    
+    let days, discount = 0;
+    
+    if (diffHours <= 24) {
+      days = 1;
+    } else if (diffHours <= 36) {
+      days = 1.5;
+    } else if (diffHours <= 48) {
+      days = 2;
+    } else {
+      days = Math.ceil(diffHours / 24);
+    }
+    
+    if (days >= 30) {
+      discount = 0.45;
+    } else if (days >= 15) {
+      discount = 0.35;
+    } else if (days >= 7) {
+      discount = 0.15;
+    }
+    
+    const baseRental = days * currentBike.price;
+    const discountAmount = baseRental * discount;
+    rental = baseRental - discountAmount;
   }
-    const delivery  = deliveryMode === 'doorstep' ? 49 : 0;
-  const grand = rental  + delivery;
+  
+  const grand = Math.round(rental);
   document.getElementById('payAmountDisplay').textContent = `₹${grand}`;
   return grand;
 }
@@ -465,10 +571,37 @@ document.getElementById('payNowBtn').addEventListener('click', async () => {
 async function saveBooking(paymentId = '') {
   const s     = document.getElementById('startDate').value;
   const e     = document.getElementById('endDate').value;
-  const days  = s && e ? Math.max(1, Math.round((new Date(e) - new Date(s)) / 86400000)) : 1;
-  const rental = days * (currentBike ? currentBike.price : 0);
-    const delivery  = deliveryMode === 'doorstep' ? 49 : 0;
-  const total = rental  + delivery;
+  
+  const startDate = new Date(s);
+  const endDate = new Date(e);
+  const diffTime = endDate - startDate;
+  const diffHours = diffTime / (1000 * 60 * 60);
+  
+  let days, discount = 0;
+  
+  if (diffHours <= 24) {
+    days = 1;
+  } else if (diffHours <= 36) {
+    days = 1.5;
+  } else if (diffHours <= 48) {
+    days = 2;
+  } else {
+    days = Math.ceil(diffHours / 24);
+  }
+  
+  if (days >= 30) {
+    discount = 0.45;
+  } else if (days >= 15) {
+    discount = 0.35;
+  } else if (days >= 7) {
+    discount = 0.15;
+  }
+  
+  const baseRental = days * (currentBike ? currentBike.price : 0);
+  const discountAmount = baseRental * discount;
+  const rental = baseRental - discountAmount;
+  const total = Math.round(rental);
+  
   const pickupTime = document.getElementById('pickupTime')?.value || '10:00';
   const dropTime   = document.getElementById('dropTime')?.value   || '10:00';
 
@@ -501,73 +634,11 @@ async function saveBooking(paymentId = '') {
 
 document.getElementById('doneBtn').addEventListener('click', closeModal);
 
-// ── REVIEWS ──
-async function renderReviews() {
-  if (!currentBike) return;
-  const list = document.getElementById('reviewsList');
-  list.innerHTML = '<div class="no-reviews"><i class="fas fa-spinner fa-spin"></i> Loading…</div>';
 
-  try {
-    const res     = await fetch(`${API}/reviews/${currentBike._id}`);
-    const reviews = await res.json();
-
-    if (!reviews.length) {
-      list.innerHTML = '<div class="no-reviews">No reviews yet. Be the first!</div>';
-      return;
-    }
-
-    list.innerHTML = reviews.map(r => `
-      <div class="review-item">
-        <div class="review-header">
-          <div class="review-avatar">${r.name.charAt(0).toUpperCase()}</div>
-          <div class="review-meta">
-            <strong>${r.name}</strong>
-            <div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
-          </div>
-        </div>
-        <p class="review-text">${r.text}</p>
-      </div>
-    `).join('');
-  } catch {
-    list.innerHTML = '<div class="no-reviews">Could not load reviews.</div>';
-  }
-}
-
-// ── STAR PICKER ──
-function updateStarPicker(val) {
-  document.querySelectorAll('.stars-input i').forEach((star, i) => star.classList.toggle('active', i < val));
-}
-
-document.querySelectorAll('.stars-input i').forEach(star => {
-  star.addEventListener('click',      () => { selectedRating = +star.dataset.val; updateStarPicker(selectedRating); });
-  star.addEventListener('mouseenter', () => updateStarPicker(+star.dataset.val));
-  star.addEventListener('mouseleave', () => updateStarPicker(selectedRating));
-});
-
-document.getElementById('submitReviewBtn').addEventListener('click', async () => {
-  const name = document.getElementById('reviewName').value.trim();
-  const text = document.getElementById('reviewText').value.trim();
-  if (!name || !text || !selectedRating) { alert('Please fill in your name, rating, and review.'); return; }
-
-  try {
-    const res = await fetch(`${API}/reviews/${currentBike._id}`, {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, rating: selectedRating, text })
-    });
-    if (!res.ok) throw new Error();
-    document.getElementById('reviewName').value = '';
-    document.getElementById('reviewText').value = '';
-    selectedRating = 0;
-    updateStarPicker(0);
-    renderReviews();
-  } catch {
-    alert('Failed to submit review. Please try again.');
-  }
-});
 
 // ── INIT ──
 loadBikes();
+
 
 
 
