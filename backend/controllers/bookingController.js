@@ -3,10 +3,10 @@ const Booking = require('../models/Booking');
 // POST /api/bookings
 const createBooking = async (req, res) => {
   try {
-    const { customer, phone, bike, bikeId, from, to, amount, payMethod, pickupTime, dropTime } = req.body;
+    const { customer, phone, bike, bikeId, from, to, amount, payMethod, pickupTime, dropTime, delivery, paymentId } = req.body;
     if (!customer || !phone || !bike || !from || !to || !amount)
       return res.status(400).json({ message: 'All booking fields are required' });
-    const booking = await Booking.create({ customer, phone, bike, bikeId, from, to, amount, payMethod, pickupTime, dropTime });
+    const booking = await Booking.create({ customer, phone, bike, bikeId, from, to, amount, payMethod, pickupTime, dropTime, delivery, paymentId });
     res.status(201).json(booking);
   } catch (err) {
     res.status(500).json({ message: err.message });
