@@ -407,7 +407,16 @@
 }
 .cash-note i { color: #16a34a; margin-top: 2px; flex-shrink: 0; }
 
-/* ── DELIVERY NOTE ── */
+/* ── ONLINE UNAVAILABLE ── */
+.online-unavailable {
+  text-align: center; padding: 32px 16px;
+  background: rgba(255,122,0,0.04);
+  border: 1px solid rgba(255,122,0,0.2);
+  border-radius: 12px;
+}
+.ou-icon { font-size: 48px; color: var(--border); margin-bottom: 16px; }
+.online-unavailable h4 { font-size: 17px; font-weight: 700; margin-bottom: 10px; color: var(--text); }
+.online-unavailable p { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
 .delivery-note {
   display: flex; align-items: flex-start; gap: 8px;
   background: rgba(255,122,0,0.05); border: 1px solid rgba(255,122,0,0.2);

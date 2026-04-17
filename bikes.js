@@ -325,66 +325,46 @@ function validateStep1() {
 document.getElementById('proceedPayBtn').addEventListener('click', () => {
   if (!validateStep1()) return;
   const pref = document.getElementById('payPreference').value;
-  if (pref === 'cash') {
-    const s = document.getElementById('startDate').value;
-    const e = document.getElementById('endDate').value;
-    
-    const startDate = new Date(s);
-    const endDate = new Date(e);
-    const diffTime = endDate - startDate;
-    const diffHours = diffTime / (1000 * 60 * 60);
-    
-    let days, discount = 0;
-    
-    // Calculate billing based on hours
-    if (diffHours <= 24) {
-      days = 1;
-    } else if (diffHours <= 36) {
-      days = 1.5;
-    } else if (diffHours <= 48) {
-      days = 2;
-    } else {
-      days = Math.ceil(diffHours / 24);
-    }
-    
-    // Apply discounts
-    if (days >= 30) {
-      discount = 0.45;
-    } else if (days >= 15) {
-      discount = 0.35;
-    } else if (days >= 7) {
-      discount = 0.15;
-    }
-    
-    const baseRental = days * (currentBike ? currentBike.price : 0);
-    const discountAmount = baseRental * discount;
-    const rental = baseRental - discountAmount;
-    const grand = Math.round(rental);
-    
-    const pickup = document.getElementById('pickupTime').value || '10:00';
-    document.getElementById('cashBikeSummary').innerHTML = `
-      <div class="cash-bike-card">
-        <img src="${currentBike.img}" alt="${currentBike.name}" />
-        <div class="cash-bike-info">
-          <h4>${currentBike.name}</h4>
-          <div class="cash-stars">${'★'.repeat(Math.round(currentBike.rating||4))}${'☆'.repeat(5-Math.round(currentBike.rating||4))} <span>${currentBike.rating||'4.5'}</span></div>
-          <p><i class="fas fa-location-dot"></i> ${currentBike.location || 'Karwan East, Hyderabad'}</p>
-        </div>
-      </div>
-      <div class="cash-summary-rows">
-        <div class="cash-row"><span>Duration</span><span>${days} day${days>1?'s':''}</span></div>
-        <div class="cash-row"><span>Pickup Date</span><span>${s}</span></div>
-        <div class="cash-row"><span>Pickup Time</span><span>${pickup}</span></div>
-        <div class="cash-row"><span>Delivery</span><span>${deliveryMode === 'doorstep' ? 'Doorstep' : 'Pick up at Store'}</span></div>
-        <div class="cash-row"><span>Base Rental</span><span>&#8377;${Math.round(baseRental)}</span></div>
-        ${discount > 0 ? `<div class="cash-row"><span>Discount (${Math.round(discount*100)}%)</span><span>-&#8377;${Math.round(discountAmount)}</span></div>` : ''}
-        <div class="cash-row total"><span>Total (Pay at Pickup)</span><span>&#8377;${grand}</span></div>
-      </div>`;
-    showStep(1, 'cash');
-  } else {
-    updatePayAmount();
+  if (pref === 'online') {
     showStep(2);
+    return;
   }
+  // Cash on Pickup
+  const s = document.getElementById('startDate').value;
+  const e = document.getElementById('endDate').value;
+  const startD = new Date(s), endD = new Date(e);
+  const diffHours = (endD - startD) / (1000 * 60 * 60);
+  let days = diffHours <= 24 ? 1 : diffHours <= 36 ? 1.5 : diffHours <= 48 ? 2 : Math.ceil(diffHours / 24);
+  let discount = days >= 30 ? 0.45 : days >= 15 ? 0.35 : days >= 7 ? 0.15 : 0;
+  const baseRental = days * (currentBike ? currentBike.price : 0);
+  const discountAmount = baseRental * discount;
+  const rental = baseRental - discountAmount;
+  const grand = Math.round(rental);
+  const pickup = document.getElementById('pickupTime').value || '10:00';
+  const drop   = document.getElementById('dropTime').value   || '10:00';
+  document.getElementById('cashBikeSummary').innerHTML = `
+    <div class="cash-bike-card">
+      <img src="${currentBike.img}" alt="${currentBike.name}" />
+      <div class="cash-bike-info">
+        <h4>${currentBike.name}</h4>
+        <div class="cash-stars">${'★'.repeat(Math.round(currentBike.rating||4))}${'☆'.repeat(5-Math.round(currentBike.rating||4))} <span>${currentBike.rating||'4.5'}</span></div>
+        <p><i class="fas fa-location-dot"></i> ${currentBike.location || 'Karwan East, Hyderabad'}</p>
+      </div>
+    </div>
+    <div class="cash-summary-rows">
+      <div class="cash-row"><span>Customer</span><span>${document.getElementById('custName').value.trim()}</span></div>
+      <div class="cash-row"><span>Phone</span><span>${document.getElementById('custPhone').value.trim()}</span></div>
+      <div class="cash-row"><span>Duration</span><span>${days} day${days>1?'s':''}</span></div>
+      <div class="cash-row"><span>From</span><span>${s}</span></div>
+      <div class="cash-row"><span>To</span><span>${e}</span></div>
+      <div class="cash-row"><span>Pickup Time</span><span>${pickup}</span></div>
+      <div class="cash-row"><span>Drop Time</span><span>${drop}</span></div>
+      <div class="cash-row"><span>Delivery</span><span>${deliveryMode === 'doorstep' ? 'Doorstep (+₹199 separately)' : 'Pick up at Store'}</span></div>
+      <div class="cash-row"><span>Base Rental</span><span>&#8377;${Math.round(baseRental)}</span></div>
+      ${discount > 0 ? `<div class="cash-row" style="color:#16a34a"><span>Discount (${Math.round(discount*100)}% off)</span><span>-&#8377;${Math.round(discountAmount)}</span></div>` : ''}
+      <div class="cash-row total"><span>Total (Cash at Pickup)</span><span>&#8377;${grand}</span></div>
+    </div>`;
+  showStep(1, 'cash');
 });
 
 document.getElementById('confirmCashBtn').addEventListener('click', () => {
@@ -393,39 +373,39 @@ document.getElementById('confirmCashBtn').addEventListener('click', () => {
   const from  = document.getElementById('startDate').value || 'TBD';
   const to    = document.getElementById('endDate').value   || 'TBD';
   const time  = document.getElementById('pickupTime').value || '10:00';
-  
-  const startDate = new Date(from);
-  const endDate = new Date(to);
-  const diffTime = endDate - startDate;
-  const diffHours = diffTime / (1000 * 60 * 60);
-  
-  let days, discount = 0;
-  
-  if (diffHours <= 24) {
-    days = 1;
-  } else if (diffHours <= 36) {
-    days = 1.5;
-  } else if (diffHours <= 48) {
-    days = 2;
-  } else {
-    days = Math.ceil(diffHours / 24);
-  }
-  
-  if (days >= 30) {
-    discount = 0.45;
-  } else if (days >= 15) {
-    discount = 0.35;
-  } else if (days >= 7) {
-    discount = 0.15;
-  }
-  
+  const drop  = document.getElementById('dropTime').value  || '10:00';
+  const startD = new Date(from), endD = new Date(to);
+  const diffHours = (endD - startD) / (1000 * 60 * 60);
+  let days = diffHours <= 24 ? 1 : diffHours <= 36 ? 1.5 : diffHours <= 48 ? 2 : Math.ceil(diffHours / 24);
+  let discount = days >= 30 ? 0.45 : days >= 15 ? 0.35 : days >= 7 ? 0.15 : 0;
   const baseRental = days * (currentBike ? currentBike.price : 0);
-  const discountAmount = baseRental * discount;
-  const rental = baseRental - discountAmount;
-  const grand = Math.round(rental);
-  
-  const msg = encodeURIComponent(`Hi, I want to book *${currentBike.name}* (Cash on Pickup)\nFrom: ${from} To: ${to} (${days} day${days>1?'s':''})\nPickup Time: ${time}\nDelivery: ${deliveryMode === 'doorstep' ? 'Doorstep' : 'Pick up at Store'}\nTotal: \u20b9${grand}\nName: ${name}\nPhone: ${phone}\nPlease confirm my booking. - Bike Rental Hub`);
-  window.open(`https://wa.me/919391265697?text=${msg}`, '_blank');
+  const grand = Math.round(baseRental - baseRental * discount);
+  const deliveryText = deliveryMode === 'doorstep' ? 'Doorstep Delivery (+\u20b9199 payable to delivery person)' : 'Pick up at Store';
+  const discountText = discount > 0 ? `\nDiscount: ${Math.round(discount*100)}% off` : '';
+  const btn = document.getElementById('confirmCashBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Redirecting to WhatsApp...';
+  const msg = encodeURIComponent(
+    `Hi, I want to confirm my bike booking!\n\n` +
+    `*Bike:* ${currentBike.name}\n` +
+    `*Name:* ${name}\n` +
+    `*Phone:* ${phone}\n` +
+    `*From:* ${from}\n` +
+    `*To:* ${to}\n` +
+    `*Duration:* ${days} day${days>1?'s':''}\n` +
+    `*Pickup Time:* ${time}\n` +
+    `*Drop Time:* ${drop}\n` +
+    `*Delivery:* ${deliveryText}` +
+    discountText +
+    `\n*Total:* \u20b9${grand} (Cash on Pickup)\n\n` +
+    `Please confirm my booking. Thank you!`
+  );
+  setTimeout(() => {
+    window.open(`https://wa.me/919391265697?text=${msg}`, '_blank');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fab fa-whatsapp"></i> Confirm Booking';
+    showStep(3);
+  }, 1500);
 });
 
 function updatePayAmount() {

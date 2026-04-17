@@ -197,78 +197,30 @@
       <!-- STEP 2: ONLINE PAYMENT -->
       <div class="step hidden" id="step2">
         <button class="back-btn" onclick="showStep(1)"><i class="fas fa-arrow-left"></i> Back</button>
-        <h3 class="step-title"><i class="fas fa-lock"></i> Secure Payment</h3>
-        <div class="pay-amount-display" id="payAmountDisplay"></div>
-
-        <div class="pay-tabs">
-          <button class="pay-tab active" data-pay="upi"><i class="fas fa-mobile-screen"></i> UPI</button>
-          <button class="pay-tab" data-pay="card"><i class="fas fa-credit-card"></i> Card</button>
-          <button class="pay-tab" data-pay="qr"><i class="fas fa-qrcode"></i> QR Code</button>
+        <h3 class="step-title"><i class="fas fa-lock"></i> Online Payment</h3>
+        <div class="online-unavailable">
+          <div class="ou-icon"><i class="fas fa-credit-card"></i></div>
+          <h4>Online Payment Not Available</h4>
+          <p>We are currently not accepting online payments. Please select <strong>Cash on Pickup</strong> to confirm your booking.</p>
+          <button class="back-btn" style="margin:16px auto 0;display:flex;" onclick="showStep(1)"><i class="fas fa-arrow-left"></i> Go Back & Select Cash on Pickup</button>
         </div>
-
-        <!-- UPI -->
-        <div class="pay-content active" id="pay-upi">
-          <div class="form-group">
-            <label>UPI ID</label>
-            <input type="text" id="upiId" placeholder="yourname@upi" />
-          </div>
-          <div class="upi-apps">
-            <div class="upi-app"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Paytm_Logo_%28standalone%29.svg/200px-Paytm_Logo_%28standalone%29.svg.png" alt="Paytm" /><span>Paytm</span></div>
-            <div class="upi-app"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_Logo.svg/200px-Google_Pay_Logo.svg.png" alt="GPay" /><span>GPay</span></div>
-            <div class="upi-app"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/PhonePe_Logo.svg/200px-PhonePe_Logo.svg.png" alt="PhonePe" /><span>PhonePe</span></div>
-          </div>
-        </div>
-
-        <!-- CARD -->
-        <div class="pay-content hidden" id="pay-card">
-          <div class="form-group">
-            <label>Card Number</label>
-            <input type="text" id="cardNum" placeholder="1234 5678 9012 3456" maxlength="19" />
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label>Expiry</label>
-              <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5" />
-            </div>
-            <div class="form-group">
-              <label>CVV</label>
-              <input type="password" id="cardCvv" placeholder="•••" maxlength="3" />
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Name on Card</label>
-            <input type="text" id="cardName" placeholder="Full name" />
-          </div>
-        </div>
-
-        <!-- QR -->
-        <div class="pay-content hidden" id="pay-qr">
-          <div class="qr-wrap">
-            <div class="qr-placeholder">
-              <i class="fas fa-qrcode"></i>
-              <p>Scan with any UPI app</p>
-              <small>Paytm · GPay · PhonePe · BHIM</small>
-            </div>
-          </div>
-        </div>
-
-        <button class="btn-primary pay-now-btn" id="payNowBtn" style="width:100%;justify-content:center;margin-top:16px;">
-          <i class="fas fa-lock"></i> Pay Now
-        </button>
-        <p class="ssl-note"><i class="fas fa-shield-halved"></i> 256-bit SSL encrypted · 100% secure</p>
       </div>
 
       <!-- STEP 2B: CASH ON PICKUP -->
       <div class="step hidden" id="step2b">
         <button class="back-btn" onclick="showStep(1)"><i class="fas fa-arrow-left"></i> Back</button>
-        <h3 class="step-title"><i class="fas fa-hand-holding-dollar"></i> Cash on Pickup</h3>
+        <h3 class="step-title"><i class="fas fa-hand-holding-dollar"></i> Confirm Booking</h3>
         <div class="cash-bike-summary" id="cashBikeSummary"></div>
         <div class="cash-note">
           <i class="fas fa-circle-info"></i>
           Pay the total amount in cash when you pick up the bike. No advance required.
         </div>
-        <button class="btn-primary" id="confirmCashBtn" style="width:100%;justify-content:center;margin-top:16px;">
-          <i class="fab fa-whatsapp"></i> Confirm Booking via WhatsApp
+        <div class="cash-note" style="margin-top:8px;">
+          <i class="fas fa-whatsapp" style="color:#25d366"></i>
+          After confirming, you will be redirected to WhatsApp with your booking details.
+        </div>
+        <button class="btn-primary" id="confirmCashBtn" style="width:100%;justify-content:center;margin-top:16px;background:#25d366;box-shadow:0 4px 16px rgba(37,211,102,0.3);">
+          <i class="fab fa-whatsapp"></i> Confirm Booking
         </button>
       </div>
 
@@ -281,8 +233,8 @@
               <path class="check-mark" fill="none" d="M14 27 l8 8 l16-16"/>
             </svg>
           </div>
-          <h2>Payment Successful!</h2>
-          <p>Your bike has been booked. We'll contact you shortly.</p>
+          <h2>Booking Confirmed!</h2>
+          <p>Your booking request has been sent via WhatsApp. We'll confirm shortly.</p>
           <div class="booking-id-box">
             <span>Booking ID</span>
             <strong id="bookingIdDisplay"></strong>
