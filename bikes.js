@@ -616,8 +616,9 @@ document.getElementById('doneBtn').addEventListener('click', closeModal);
 
 
 
-// ── INIT ──
-loadBikes();
+// -- INIT --
+document.addEventListener('DOMContentLoaded', () => loadBikes());
+
 
 
 
