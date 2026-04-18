@@ -49,7 +49,7 @@ async function loadBikes() {
     if (activeSort)          params.set('sort', activeSort);
     if (searchQuery)         params.set('search', searchQuery);
 
-    const res  = await fetch(`${API}/bikes?${params}`);
+    params.set('_t', Date.now()); const res  = await fetch(`${API}/bikes?${params}`);
     bikes = await res.json();
     renderBikes();
   } catch (err) {
@@ -65,11 +65,13 @@ async function loadBikes() {
 
 // ── RENDER ──
 function renderBikes() {
+  const grid = document.getElementById('bikesGrid'); const noRes = document.getElementById('noResults'); const counter = document.getElementById('bikesCount');
+  if (!grid || !noRes || !counter) return;
   const grid    = document.getElementById('bikesGrid');
-  const noRes   = document.getElementById('noResults');
-  const counter = document.getElementById('bikesCount');
 
-  counter.innerHTML = `Showing <span>${bikes.length}</span> bike${bikes.length !== 1 ? 's' : ''}`;
+
+
+
 
   if (!bikes.length) {
     grid.innerHTML = '';
@@ -617,7 +619,9 @@ document.getElementById('doneBtn').addEventListener('click', closeModal);
 
 
 // -- INIT --
-document.addEventListener('DOMContentLoaded', () => loadBikes());
+loadBikes();
+
+
 
 
 

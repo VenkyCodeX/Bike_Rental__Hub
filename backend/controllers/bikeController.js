@@ -14,7 +14,9 @@ const getBikes = async (req, res) => {
     if (sort === 'price-asc')  bikes = bikes.sort({ price:  1 });
     if (sort === 'price-desc') bikes = bikes.sort({ price: -1 });
     if (sort === 'rating')     bikes = bikes.sort({ rating: -1 });
+    if (!sort)                 bikes = bikes.sort({ createdAt: 1 });
 
+    res.set('Cache-Control', 'no-store');
     res.json(await bikes.lean());
   } catch (err) {
     res.status(500).json({ message: err.message });
