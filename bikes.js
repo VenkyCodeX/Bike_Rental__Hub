@@ -469,17 +469,17 @@ document.querySelectorAll('.pay-tab').forEach(tab => {
 });
 
 // ── CARD FORMAT ──
-document.getElementById('cardNum').addEventListener('input', e => {
+document.getElementById('cardNum')?.addEventListener('input', e => {
   e.target.value = e.target.value.replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim().slice(0, 19);
 });
-document.getElementById('cardExpiry').addEventListener('input', e => {
+document.getElementById('cardExpiry')?.addEventListener('input', e => {
   let v = e.target.value.replace(/\D/g, '');
   if (v.length >= 2) v = v.slice(0, 2) + '/' + v.slice(2, 4);
   e.target.value = v;
 });
 
 // ── PAY NOW → RAZORPAY CHECKOUT ──
-document.getElementById('payNowBtn').addEventListener('click', async () => {
+document.getElementById('payNowBtn')?.addEventListener('click', async () => {
   const btn = document.getElementById('payNowBtn');
   btn.disabled = true;
   btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing…';
