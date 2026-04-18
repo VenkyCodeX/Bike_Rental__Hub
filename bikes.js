@@ -65,9 +65,10 @@ async function loadBikes() {
 
 // ── RENDER ──
 function renderBikes() {
-  const grid = document.getElementById('bikesGrid'); const noRes = document.getElementById('noResults'); const counter = document.getElementById('bikesCount');
-  if (!grid || !noRes || !counter) return;
   const grid    = document.getElementById('bikesGrid');
+  const noRes   = document.getElementById('noResults');
+  const counter = document.getElementById('bikesCount');
+  if (!grid || !noRes || !counter) return;
 
 
 
