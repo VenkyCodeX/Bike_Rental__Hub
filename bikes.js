@@ -43,14 +43,19 @@ function badgeClass(badge) {
 
 // ── FETCH BIKES FROM API ──
 async function loadBikes() {
+  const grid = document.getElementById('bikesGrid');
+  if (grid && !grid.children.length) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:#999"><i class="fas fa-spinner fa-spin" style="font-size:32px"></i></div>';
+  }
   try {
     const params = new URLSearchParams();
     if (activeCat !== 'all') params.set('category', activeCat);
     if (activeSort)          params.set('sort', activeSort);
     if (searchQuery)         params.set('search', searchQuery);
 
-    params.set('_t', Date.now()); const res  = await fetch(`${API}/bikes?${params}`);
-    bikes = await res.json();
+    const res = await fetch(`${API}/bikes?${params}`);
+    const data = await res.json();
+    bikes = Array.isArray(data) ? data : [];
     renderBikes();
   } catch (err) {
     console.error('Failed to load bikes:', err);
@@ -620,7 +625,7 @@ document.getElementById('doneBtn').addEventListener('click', closeModal);
 
 
 // -- INIT --
-loadBikes();
+document.addEventListener('DOMContentLoaded', loadBikes);
 
 
 
