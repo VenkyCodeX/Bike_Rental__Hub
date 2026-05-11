@@ -36,6 +36,12 @@ app.use('/api/payment',  require('./routes/payment'));
 // Health check
 app.get('/api/health', (req, res) => res.json({ status: 'ok', service: 'Bike Rental Hub API' }));
 
+// ── CLEAN URLs ──
+app.get('/bikes',      (req, res) => res.sendFile(path.join(__dirname, '..', 'bikes.html')));
+app.get('/admin',      (req, res) => res.sendFile(path.join(__dirname, '..', 'admin.html')));
+app.get('/terms',      (req, res) => res.sendFile(path.join(__dirname, '..', 'terms.html')));
+app.get('/mybookings', (req, res) => res.sendFile(path.join(__dirname, '..', 'mybookings.html')));
+
 // Fallback: serve 404 page for non-API routes only
 app.get('*', (req, res) => {
   if (req.path.startsWith('/api/')) {
