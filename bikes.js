@@ -1,6 +1,6 @@
 'use strict';
 
-const API = '/api';
+const API = 'https://bikerentalhub-production.up.railway.app/api';
 
 // ── HAMBURGER ──
 const hamburger = document.getElementById('hamburger');

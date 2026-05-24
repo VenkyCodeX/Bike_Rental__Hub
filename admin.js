@@ -1,6 +1,6 @@
 'use strict';
 
-const API = '/api';
+const API = 'https://bikerentalhub-production.up.railway.app/api';
 
 // ── HELPERS ──
 const $       = id => document.getElementById(id);
