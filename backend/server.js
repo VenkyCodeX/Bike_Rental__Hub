@@ -12,9 +12,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve frontend static files from parent directory
-app.use(express.static(path.join(__dirname, '..')));
-
 // ── API ROUTES ──
 app.use('/api/auth',     require('./routes/auth'));
 app.use('/api/bikes',    require('./routes/bikes'));
@@ -25,6 +22,9 @@ app.use('/api/payment',  require('./routes/payment'));
 
 // Health check
 app.get('/api/health', (req, res) => res.json({ status: 'ok', service: 'Bike Rental Hub API' }));
+
+// Serve frontend static files from parent directory
+app.use(express.static(path.join(__dirname, '..')));
 
 // ── CLEAN URLs ──
 app.get('/bikes',      (req, res) => res.sendFile(path.join(__dirname, '..', 'bikes.html')));
