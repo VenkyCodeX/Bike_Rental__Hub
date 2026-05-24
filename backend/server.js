@@ -24,10 +24,8 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Serve frontend static files from parent directory (local only)
-if (process.env.NODE_ENV !== 'production') {
-  app.use(express.static(path.join(__dirname, '..')));
-}
+// Serve frontend static files from parent directory
+app.use(express.static(path.join(__dirname, '..')));
 
 // ── API ROUTES ──
 app.use('/api/auth',     require('./routes/auth'));
@@ -40,17 +38,15 @@ app.use('/api/payment',  require('./routes/payment'));
 // Health check
 app.get('/api/health', (req, res) => res.json({ status: 'ok', service: 'Bike Rental Hub API' }));
 
-// ── CLEAN URLs (local dev only) ──
-if (process.env.NODE_ENV !== 'production') {
-  app.get('/bikes',      (req, res) => res.sendFile(path.join(__dirname, '..', 'bikes.html')));
-  app.get('/admin',      (req, res) => res.sendFile(path.join(__dirname, '..', 'admin.html')));
-  app.get('/terms',      (req, res) => res.sendFile(path.join(__dirname, '..', 'terms.html')));
-  app.get('/mybookings', (req, res) => res.sendFile(path.join(__dirname, '..', 'mybookings.html')));
-}
+// ── CLEAN URLs ──
+app.get('/bikes',      (req, res) => res.sendFile(path.join(__dirname, '..', 'bikes.html')));
+app.get('/admin',      (req, res) => res.sendFile(path.join(__dirname, '..', 'admin.html')));
+app.get('/terms',      (req, res) => res.sendFile(path.join(__dirname, '..', 'terms.html')));
+app.get('/mybookings', (req, res) => res.sendFile(path.join(__dirname, '..', 'mybookings.html')));
 
-// Fallback
+// Fallback → serve index.html
 app.get('*', (req, res) => {
-  res.status(404).json({ message: 'Not found' });
+  res.sendFile(path.join(__dirname, '..', 'index.html'));
 });
 
 // ── GLOBAL ERROR HANDLER ──
