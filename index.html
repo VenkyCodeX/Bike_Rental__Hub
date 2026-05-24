@@ -586,7 +586,7 @@ function searchBikes() {
   const end   = new Date(`${d2}T${t2}`);
   if (end <= start) { alert('End time must be after start time.'); return; }
   const hours = ((end - start) / (1000 * 60 * 60)).toFixed(2);
-  window.location.href = `/bikes?from=${d1}&fromTime=${t1}&to=${d2}&toTime=${t2}&hours=${hours}&budget=${budget}`;
+  window.location.href = `bikes.html?from=${d1}&fromTime=${t1}&to=${d2}&toTime=${t2}&hours=${hours}&budget=${budget}`;
 }
 function toggleFaq(btn) {
   const item = btn.closest('.faq-item');
