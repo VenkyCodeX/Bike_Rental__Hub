@@ -23,8 +23,10 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Serve frontend static files from parent directory
-app.use(express.static(path.join(__dirname, '..')));
+// Serve frontend static files from parent directory (local only)
+if (process.env.NODE_ENV !== 'production') {
+  app.use(express.static(path.join(__dirname, '..')));
+}
 
 // ── API ROUTES ──
 app.use('/api/auth',     require('./routes/auth'));
@@ -37,18 +39,17 @@ app.use('/api/payment',  require('./routes/payment'));
 // Health check
 app.get('/api/health', (req, res) => res.json({ status: 'ok', service: 'Bike Rental Hub API' }));
 
-// ── CLEAN URLs ──
-app.get('/bikes',      (req, res) => res.sendFile(path.join(__dirname, '..', 'bikes.html')));
-app.get('/admin',      (req, res) => res.sendFile(path.join(__dirname, '..', 'admin.html')));
-app.get('/terms',      (req, res) => res.sendFile(path.join(__dirname, '..', 'terms.html')));
-app.get('/mybookings', (req, res) => res.sendFile(path.join(__dirname, '..', 'mybookings.html')));
+// ── CLEAN URLs (local dev only) ──
+if (process.env.NODE_ENV !== 'production') {
+  app.get('/bikes',      (req, res) => res.sendFile(path.join(__dirname, '..', 'bikes.html')));
+  app.get('/admin',      (req, res) => res.sendFile(path.join(__dirname, '..', 'admin.html')));
+  app.get('/terms',      (req, res) => res.sendFile(path.join(__dirname, '..', 'terms.html')));
+  app.get('/mybookings', (req, res) => res.sendFile(path.join(__dirname, '..', 'mybookings.html')));
+}
 
-// Fallback: serve 404 page for non-API routes only
+// Fallback
 app.get('*', (req, res) => {
-  if (req.path.startsWith('/api/')) {
-    return res.status(404).json({ message: 'API route not found' });
-  }
-  res.sendFile(path.join(__dirname, '..', '404.html'));
+  res.status(404).json({ message: 'Not found' });
 });
 
 // ── GLOBAL ERROR HANDLER ──
