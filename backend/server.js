@@ -16,6 +16,7 @@ app.use(cors({
     'https://venkycodex.github.io',
     'https://bike-rental-hub.onrender.com',
     'https://bikerentalhub-production.up.railway.app',
+    'https://bike-rental-hub-lovat.vercel.app',
     'https://bikerentalhub.co.in',
     'https://www.bikerentalhub.co.in'
   ],
