@@ -106,7 +106,21 @@
     <div class="book-field"><input type="date" id="bkDateEnd" /><i class="fas fa-calendar"></i></div>
     <div class="book-field"><input type="time" id="bkTimeEnd" value="10:00" /><i class="fas fa-clock"></i></div>
   </div>
-  <a href="/bikes" class="book-search-btn">Search</a>
+
+  <!-- DURATION DISPLAY -->
+  <div class="bk-duration" id="bkDuration"></div>
+
+  <!-- BUDGET SLIDER -->
+  <div class="bk-budget">
+    <div class="bk-budget-label">
+      <span><i class="fas fa-wallet"></i> Your Budget</span>
+      <strong class="bk-budget-val">&#8377;<span id="bkBudgetVal">2000</span></strong>
+    </div>
+    <input type="range" id="bkBudget" min="100" max="10000" step="50" value="2000" class="bk-slider" />
+    <div class="bk-budget-range"><span>&#8377;100</span><span>&#8377;10,000+</span></div>
+  </div>
+
+  <button onclick="searchBikes()" class="book-search-btn"><i class="fas fa-search"></i> Search Bikes</button>
 </div>
 
 <!-- FEATURED BIKES CAROUSEL -->
@@ -520,6 +534,59 @@ function setTab(tab) {
   document.getElementById('tabMonthly').classList.toggle('active', tab==='monthly');
   document.getElementById('bkReturnRow').style.display = tab==='daily' ? 'grid' : 'none';
   document.getElementById('bkMonthlyEndRow').style.display = tab==='monthly' ? 'grid' : 'none';
+  updateDuration();
+}
+
+function updateDuration() {
+  const d1 = document.getElementById('bkDate1').value;
+  const t1 = document.getElementById('bkTime1').value || '10:00';
+  const d2 = document.getElementById('bkDate2').value;
+  const t2 = document.getElementById('bkTime2').value || '10:00';
+  const el = document.getElementById('bkDuration');
+  if (!d1 || !d2) { el.textContent = ''; return; }
+  const start = new Date(`${d1}T${t1}`);
+  const end   = new Date(`${d2}T${t2}`);
+  const diffMs = end - start;
+  if (diffMs <= 0) { el.innerHTML = '<span style="color:#e53e3e">End time must be after start time</span>'; return; }
+  const totalHours = diffMs / (1000 * 60 * 60);
+  const days  = Math.floor(totalHours / 24);
+  const hours = Math.round(totalHours % 24);
+  let label = '';
+  if (days > 0 && hours > 0) label = `${days} day${days>1?'s':''} ${hours} hr${hours>1?'s':''}`;
+  else if (days > 0)         label = `${days} day${days>1?'s':''}`;
+  else                       label = `${totalHours.toFixed(1)} hours`;
+  el.innerHTML = `<i class="fas fa-clock" style="color:var(--orange)"></i> Duration: <strong>${label}</strong> (${totalHours.toFixed(1)} hrs)`;
+}
+
+// Budget slider dynamic gradient
+const bkBudget = document.getElementById('bkBudget');
+const bkBudgetVal = document.getElementById('bkBudgetVal');
+if (bkBudget) {
+  function updateSlider() {
+    const pct = ((bkBudget.value - bkBudget.min) / (bkBudget.max - bkBudget.min)) * 100;
+    bkBudget.style.background = `linear-gradient(to right, var(--orange) ${pct}%, #ddd ${pct}%)`;
+    bkBudgetVal.textContent = Number(bkBudget.value).toLocaleString('en-IN');
+  }
+  bkBudget.addEventListener('input', updateSlider);
+  updateSlider();
+}
+
+['bkDate1','bkTime1','bkDate2','bkTime2'].forEach(id => {
+  document.getElementById(id).addEventListener('change', updateDuration);
+});
+
+function searchBikes() {
+  const d1 = document.getElementById('bkDate1').value;
+  const t1 = document.getElementById('bkTime1').value || '10:00';
+  const d2 = document.getElementById('bkDate2').value;
+  const t2 = document.getElementById('bkTime2').value || '10:00';
+  const budget = document.getElementById('bkBudget').value;
+  if (!d1 || !d2) { alert('Please select start and end date/time.'); return; }
+  const start = new Date(`${d1}T${t1}`);
+  const end   = new Date(`${d2}T${t2}`);
+  if (end <= start) { alert('End time must be after start time.'); return; }
+  const hours = ((end - start) / (1000 * 60 * 60)).toFixed(2);
+  window.location.href = `/bikes?from=${d1}&fromTime=${t1}&to=${d2}&toTime=${t2}&hours=${hours}&budget=${budget}`;
 }
 function toggleFaq(btn) {
   const item = btn.closest('.faq-item');

@@ -2,6 +2,15 @@
 
 const API = 'https://bikerentalhub-production.up.railway.app/api';
 
+// Read URL params from home page search
+const _params  = new URLSearchParams(window.location.search);
+const _hours   = parseFloat(_params.get('hours')) || 0;
+const _budget  = parseFloat(_params.get('budget')) || 0;
+const _from    = _params.get('from') || '';
+const _fromTime= _params.get('fromTime') || '';
+const _to      = _params.get('to') || '';
+const _toTime  = _params.get('toTime') || '';
+
 // ── HAMBURGER ──
 const hamburger = document.getElementById('hamburger');
 const navLinks  = document.getElementById('navLinks');
@@ -41,6 +50,24 @@ function badgeClass(badge) {
   return map[badge] || 'badge-available';
 }
 
+// ── CALC HELPERS ──
+function calcTotal(pricePerDay, hours) {
+  let days;
+  if (hours <= 24)      days = 1;
+  else if (hours <= 36) days = 1.5;
+  else if (hours <= 48) days = 2;
+  else                  days = Math.ceil(hours / 24);
+  let discount = days >= 30 ? 0.45 : days >= 15 ? 0.35 : days >= 7 ? 0.15 : 0;
+  return Math.round(days * pricePerDay * (1 - discount));
+}
+
+function formatHours(h) {
+  const d = Math.floor(h / 24), rem = Math.round(h % 24);
+  if (d > 0 && rem > 0) return `${d}d ${rem}h`;
+  if (d > 0)            return `${d} day${d>1?'s':''}`;
+  return `${h.toFixed(1)} hrs`;
+}
+
 // ── FETCH BIKES FROM API ──
 async function loadBikes() {
   const grid = document.getElementById('bikesGrid');
@@ -75,20 +102,30 @@ function renderBikes() {
   const counter = document.getElementById('bikesCount');
   if (!grid || !noRes || !counter) return;
 
+  // Filter by budget if hours + budget set
+  const filtered = (_hours > 0 && _budget > 0)
+    ? bikes.filter(b => calcTotal(b.price, _hours) <= _budget)
+    : bikes;
 
+  let countLabel = `Showing <span>${filtered.length}</span> bike${filtered.length !== 1 ? 's' : ''}`;
+  if (_hours > 0) countLabel += ` &bull; <span style="color:var(--orange)">${formatHours(_hours)}</span>`;
+  if (_budget > 0) countLabel += ` &bull; Budget: <span style="color:var(--orange)">&#8377;${Number(_budget).toLocaleString('en-IN')}</span>`;
+  counter.innerHTML = countLabel;
 
-
-
-  if (!bikes.length) {
+  if (!filtered.length) {
     grid.innerHTML = '';
     noRes.classList.remove('hidden');
+    noRes.innerHTML = _budget > 0
+      ? '<i class="fas fa-wallet"></i><p>No bikes found within your budget. <a href="/bikes" style="color:var(--orange)">Clear filters</a></p>'
+      : '<i class="fas fa-motorcycle"></i><p>No bikes found. Try a different filter.</p>';
     return;
   }
   noRes.classList.add('hidden');
 
-  grid.innerHTML = bikes.map((b, i) => {
+  grid.innerHTML = filtered.map((b, i) => {
     const isMaint  = b.status === 'maintenance';
     const isRented = b.status === 'rented';
+    const calcPrice = _hours > 0 ? calcTotal(b.price, _hours) : null;
 
     let statusOverlay = '';
     if (isMaint) {
@@ -130,7 +167,8 @@ function renderBikes() {
       ${b.availableAt ? `<div class="card-available-at"><small>Available at</small><p>${b.availableAt}</p></div>` : ''}
       <div class="card-pricing">
         <div class="card-price-block">
-          <div class="card-price">&#8377;${b.price} <small>(incl. Tax)</small></div>
+          <div class="card-price">&#8377;${b.price} <small>/day</small></div>
+          ${calcPrice !== null ? `<div class="card-calc-price"><i class="fas fa-clock" style="color:var(--orange)"></i> For ${formatHours(_hours)}: <span>&#8377;${calcPrice}</span></div>` : ''}
           ${b.kmLimit ? `<div class="card-limit">${b.kmLimit} Km limit</div>` : ''}
           ${b.extraPerKm ? `<div class="card-extra">Extra: &#8377;${b.extraPerKm}/Km</div>` : ''}
           <div class="card-fuel-label">${b.fuelIncluded ? 'Fuel Included' : 'Fuel Excluded'}</div>

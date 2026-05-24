@@ -788,3 +788,64 @@ footer {
 .gr-score { font-size: 17px; font-weight: 700; color: #111; }
 .gr-stars { color: #f59e0b; font-size: 14px; letter-spacing: 1px; }
 .gr-label { font-size: 13px; color: #666; font-weight: 500; }
+
+/* ── BOOKING CARD DURATION & BUDGET ── */
+.bk-duration {
+  font-size: 13px; color: var(--text-muted);
+  margin-bottom: 10px; min-height: 18px;
+  padding: 0 2px;
+}
+.bk-duration strong { color: var(--text); }
+
+.bk-budget {
+  background: #f9f9f9; border: 1px solid #eee;
+  border-radius: 10px; padding: 12px 14px;
+  margin-bottom: 12px;
+}
+.bk-budget-label {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-bottom: 10px;
+  font-size: 13px; font-weight: 600; color: var(--text-muted);
+}
+.bk-budget-val { font-size: 15px; color: var(--orange); font-weight: 700; }
+.bk-slider {
+  width: 100%; -webkit-appearance: none; appearance: none;
+  height: 5px; border-radius: 4px; outline: none;
+  background: linear-gradient(to right, var(--orange) 0%, var(--orange) 40%, #ddd 40%, #ddd 100%);
+  cursor: pointer;
+}
+.bk-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--orange); cursor: pointer;
+  box-shadow: 0 2px 8px rgba(255,122,0,0.4);
+  border: 2px solid #fff;
+}
+.bk-slider::-moz-range-thumb {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--orange); cursor: pointer;
+  box-shadow: 0 2px 8px rgba(255,122,0,0.4);
+  border: 2px solid #fff;
+}
+.bk-budget-range {
+  display: flex; justify-content: space-between;
+  font-size: 11px; color: #aaa; margin-top: 6px;
+}
+
+/* ── BIKES PAGE: CALCULATED PRICE BADGE ── */
+.card-calc-price {
+  background: rgba(255,122,0,0.08);
+  border: 1px solid rgba(255,122,0,0.25);
+  border-radius: 8px; padding: 8px 12px;
+  margin-top: 8px; font-size: 13px;
+}
+.card-calc-price span { color: var(--orange); font-weight: 700; font-size: 15px; }
+.card-over-budget {
+  opacity: 0.45; pointer-events: none;
+}
+.card-over-budget .card-rent-btn { background: #ccc; cursor: not-allowed; }
+.budget-tag {
+  display: inline-block; background: #fee2e2;
+  color: #dc2626; font-size: 11px; font-weight: 600;
+  padding: 2px 8px; border-radius: 20px; margin-top: 4px;
+}

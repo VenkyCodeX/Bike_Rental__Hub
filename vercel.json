@@ -1,8 +1,5 @@
 {
   "rewrites": [
-    { "source": "/bikes", "destination": "/bikes.html" },
-    { "source": "/admin", "destination": "/admin.html" },
-    { "source": "/terms", "destination": "/terms.html" },
-    { "source": "/mybookings", "destination": "/mybookings.html" }
+    { "source": "/(.*)", "destination": "/$1" }
   ]
 }
