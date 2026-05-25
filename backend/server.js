@@ -9,7 +9,18 @@ connectDB();
 const app = express();
 
 // ── MIDDLEWARE ──
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:5000',
+    'http://localhost:3000',
+    'https://venkycodex.github.io',
+    'https://bikerentalhub-production.up.railway.app',
+    'https://bike-rental-hub-lovat.vercel.app',
+    'https://bikerentalhub.co.in',
+    'https://www.bikerentalhub.co.in'
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
 // ── API ROUTES ──
@@ -23,18 +34,9 @@ app.use('/api/payment',  require('./routes/payment'));
 // Health check
 app.get('/api/health', (req, res) => res.json({ status: 'ok', service: 'Bike Rental Hub API' }));
 
-// Serve frontend static files from parent directory
-app.use(express.static(path.join(__dirname, '..')));
-
-// ── CLEAN URLs ──
-app.get('/bikes',      (req, res) => res.sendFile(path.join(__dirname, '..', 'bikes.html')));
-app.get('/admin',      (req, res) => res.sendFile(path.join(__dirname, '..', 'admin.html')));
-app.get('/terms',      (req, res) => res.sendFile(path.join(__dirname, '..', 'terms.html')));
-app.get('/mybookings', (req, res) => res.sendFile(path.join(__dirname, '..', 'mybookings.html')));
-
-// Fallback → serve index.html
+// Fallback
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'index.html'));
+  res.status(404).json({ message: 'Not found' });
 });
 
 // ── GLOBAL ERROR HANDLER ──
